@@ -60,7 +60,7 @@ BenchmarkDotNet.Artifacts/
 project.lock.json
 project.fragment.lock.json
 artifacts/
-/ServerAPI/Controllers/clsDatabase.cs
+ServerAPI/Controllers/clsDatabase.cs
 
 # StyleCop
 StyleCopReport.xml

@@ -22,7 +22,7 @@ namespace ServerAPI.Controllers
             }
             return true;
         }
-        public static bool CloseConnection1()
+        public static bool CloseConnection()
         {
             try
             {
