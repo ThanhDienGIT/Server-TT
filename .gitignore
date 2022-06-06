@@ -251,7 +251,7 @@ UpgradeLog*.XML
 UpgradeLog*.htm
 ServiceFabricBackup/
 *.rptproj.bak
-Controller/clsDatabase*.cs
+clsDatabase*.cs
 # SQL Server files
 *.mdf
 *.ldf
