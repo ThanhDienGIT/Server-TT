@@ -35,7 +35,18 @@ namespace ServerAPI.Controllers
             return true;
         }
 
-       
+        public static bool CloseConnection22()
+        {
+            try
+            {
+                con.Close();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
 
 
     }
