@@ -34,5 +34,20 @@ namespace ServerAPI.Controllers
             }
             return true;
         }
+
+        public static bool testConnection()
+        {
+            try
+            {
+                con.Close();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+
     }
 }

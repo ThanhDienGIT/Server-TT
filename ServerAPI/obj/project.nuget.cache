@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "u2Ms6JN6amPTnXVaipaQ6Kaok0H+LfXVhghro5Us3CcajsqvBqPuePWJZbqejBapQPJARH4Ug19QYZ9X5WQvVg==",
+  "dgSpecHash": "Syk1BvZ+z60iiPpy1jrfzRQ3b/ghJi/uGZn3rvtn6+UnThpJsSeMqj2HCTCK7sswHyvrErvEXAbYm6ftgD0O9Q==",
   "success": true,
-  "projectFilePath": "D:\\Visual project C#\\ServerAPI\\ServerAPI\\ServerAPI.csproj",
+  "projectFilePath": "D:\\Visual project C#\\Clone\\Server-TT\\ServerAPI\\ServerAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Tu Nguyen\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\6.0.5\\microsoft.aspnetcore.jsonpatch.6.0.5.nupkg.sha512",
     "C:\\Users\\Tu Nguyen\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\6.0.5\\microsoft.aspnetcore.mvc.newtonsoftjson.6.0.5.nupkg.sha512",
