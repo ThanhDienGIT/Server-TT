@@ -22,21 +22,6 @@ namespace ServerAPI.Controllers
             }
             return true;
         }
-        public static bool CloseConnection()
-        {
-            try
-            {
-                con.Close();
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return true;
-        }
-
         
-
-
     }
 }
