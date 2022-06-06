@@ -30,7 +30,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
-clsDatabase.cs
+
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 # Uncomment if you have tasks that create the project's static files in wwwroot
@@ -251,7 +251,7 @@ UpgradeLog*.XML
 UpgradeLog*.htm
 ServiceFabricBackup/
 *.rptproj.bak
-
+Controller/clsDatabase*.cs
 # SQL Server files
 *.mdf
 *.ldf
