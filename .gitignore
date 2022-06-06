@@ -221,6 +221,10 @@ _pkginfo.txt
 !?*.[Cc]ache/
 
 # Others
+ServerAPI/Controller/database*.cs
+
+
+
 ClientBin/
 ~$*
 *~
@@ -251,7 +255,7 @@ UpgradeLog*.XML
 UpgradeLog*.htm
 ServiceFabricBackup/
 *.rptproj.bak
-clsDatabase*.cs
+
 # SQL Server files
 *.mdf
 *.ldf
