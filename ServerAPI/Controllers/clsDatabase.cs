@@ -36,7 +36,7 @@ namespace ServerAPI.Controllers
         }
 
 
-        public static bool CloseConnection23922()
+        public static bool CloseConnection239()
         {
             try
             {
