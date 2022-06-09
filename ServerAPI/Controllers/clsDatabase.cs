@@ -36,19 +36,6 @@ namespace ServerAPI.Controllers
         }
 
 
-        public static bool CloseConnection239()
-        {
-            try
-            {
-                con.Close();
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return true;
-        }
 
-        
     }
 }

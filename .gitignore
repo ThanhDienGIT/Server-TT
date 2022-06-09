@@ -221,12 +221,6 @@ _pkginfo.txt
 !?*.[Cc]ache/
 
 # Others
-ServerAPI/Controller
-~$*
-*~
-clsDatabase*.cs
-
-
 
 ClientBin/
 ~$*
