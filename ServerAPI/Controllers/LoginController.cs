@@ -45,7 +45,7 @@ namespace ServerAPI.Controllers
             int IDstaff = 0;
             if (sqlDataReader.Read())
             {
-                IDstaff = sqlDataReader.GetInt32(0);
+              IDstaff = sqlDataReader.GetInt32(0);
             }
             sqlDataReader.Close();
             clsDatabase.CloseConnection();
@@ -100,11 +100,11 @@ namespace ServerAPI.Controllers
             bool mk = false;
             while (myReader.Read())
             {
-               if(myReader.GetString(9) == login.Username)
+               if(myReader.GetString(10) == login.Username)
                 {
                     tk = true;
                 }
-               if(myReader.GetString(10) == login.Password)
+               if(myReader.GetString(11) == login.Password)
                 {
                     mk = true;
                 }

@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "EasyEncryption/1.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/EasyEncryption.dll": {}
+        },
+        "runtime": {
+          "lib/EasyEncryption.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.JsonPatch/6.0.5": {
         "type": "package",
         "dependencies": {
@@ -265,6 +274,20 @@
     }
   },
   "libraries": {
+    "EasyEncryption/1.0.2": {
+      "sha512": "Rs/YqbsOAscUbx8zVfhqp22P73oFJyQNcrVr/6dhs2xwQ3H+JgBCo7GIyybJ4b3s5vNzrC1bO7YtnocnC4Gqqg==",
+      "type": "package",
+      "path": "easyencryption/1.0.2",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "easyencryption.1.0.2.nupkg.sha512",
+        "easyencryption.nuspec",
+        "lib/EasyEncryption.dll",
+        "tools/init.ps1"
+      ]
+    },
     "Microsoft.AspNetCore.JsonPatch/6.0.5": {
       "sha512": "kxQR7xCm9pQxnM3UZBp45Z470LFa1VA0qG/hFKhpE5hOJKgLOu4zmxakoVqswptAnHuD6ghd7XGb7hm1s1D0lw==",
       "type": "package",
@@ -857,6 +880,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "EasyEncryption >= 1.0.2",
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson >= 6.0.5",
       "Swashbuckle.AspNetCore >= 6.2.3",
       "System.Data.SqlClient >= 4.8.3"
@@ -901,6 +925,10 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "EasyEncryption": {
+            "target": "Package",
+            "version": "[1.0.2, )"
+          },
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
             "target": "Package",
             "version": "[6.0.5, )"
@@ -935,5 +963,17 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'EasyEncryption 1.0.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
+      "libraryId": "EasyEncryption",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
 }

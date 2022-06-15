@@ -18,5 +18,6 @@
   </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <PkgMicrosoft_Extensions_ApiDescription_Server Condition=" '$(PkgMicrosoft_Extensions_ApiDescription_Server)' == '' ">C:\Users\Tu Nguyen\.nuget\packages\microsoft.extensions.apidescription.server\3.0.0</PkgMicrosoft_Extensions_ApiDescription_Server>
+    <PkgEasyEncryption Condition=" '$(PkgEasyEncryption)' == '' ">C:\Users\Tu Nguyen\.nuget\packages\easyencryption\1.0.2</PkgEasyEncryption>
   </PropertyGroup>
 </Project>

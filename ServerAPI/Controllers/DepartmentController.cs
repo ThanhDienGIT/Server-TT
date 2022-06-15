@@ -40,7 +40,7 @@ namespace ServerAPI.Controllers
         {
             string query = @"insert into dbo.Department values('"+ dep.DepartmentName +@"')";
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {

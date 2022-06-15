@@ -72,3 +72,4 @@ D:\Visual project C#\Clone\Server-TT\ServerAPI\obj\Debug\net6.0\refint\ServerAPI
 D:\Visual project C#\Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.pdb
 D:\Visual project C#\Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.genruntimeconfig.cache
 D:\Visual project C#\Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ref\ServerAPI.dll
+D:\Visual project C#\Clone\Server-TT\ServerAPI\bin\Debug\net6.0\EasyEncryption.dll

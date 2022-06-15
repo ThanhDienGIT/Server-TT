@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Syk1BvZ+z60iiPpy1jrfzRQ3b/ghJi/uGZn3rvtn6+UnThpJsSeMqj2HCTCK7sswHyvrErvEXAbYm6ftgD0O9Q==",
+  "dgSpecHash": "e/FvtY4Cr6vjmCONVrRdITp6Nuv39fxGJH1+Ds4X+RO+ORwBz1n0fZZY75WqBo09oP4WAO8COIgR/W4VyavtgA==",
   "success": true,
   "projectFilePath": "D:\\Visual project C#\\Clone\\Server-TT\\ServerAPI\\ServerAPI.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Tu Nguyen\\.nuget\\packages\\easyencryption\\1.0.2\\easyencryption.1.0.2.nupkg.sha512",
     "C:\\Users\\Tu Nguyen\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\6.0.5\\microsoft.aspnetcore.jsonpatch.6.0.5.nupkg.sha512",
     "C:\\Users\\Tu Nguyen\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\6.0.5\\microsoft.aspnetcore.mvc.newtonsoftjson.6.0.5.nupkg.sha512",
     "C:\\Users\\Tu Nguyen\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
@@ -25,5 +26,16 @@
     "C:\\Users\\Tu Nguyen\\.nuget\\packages\\system.security.accesscontrol\\4.7.0\\system.security.accesscontrol.4.7.0.nupkg.sha512",
     "C:\\Users\\Tu Nguyen\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'EasyEncryption 1.0.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
+      "libraryId": "EasyEncryption",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
 }
