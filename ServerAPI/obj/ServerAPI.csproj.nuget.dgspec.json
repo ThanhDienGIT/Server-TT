@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Visual project C#\\Clone\\Server-TT\\ServerAPI\\ServerAPI.csproj": {}
+    "G:\\React\\Server-TT\\ServerAPI\\ServerAPI.csproj": {}
   },
   "projects": {
-    "D:\\Visual project C#\\Clone\\Server-TT\\ServerAPI\\ServerAPI.csproj": {
+    "G:\\React\\Server-TT\\ServerAPI\\ServerAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Visual project C#\\Clone\\Server-TT\\ServerAPI\\ServerAPI.csproj",
+        "projectUniqueName": "G:\\React\\Server-TT\\ServerAPI\\ServerAPI.csproj",
         "projectName": "ServerAPI",
-        "projectPath": "D:\\Visual project C#\\Clone\\Server-TT\\ServerAPI\\ServerAPI.csproj",
-        "packagesPath": "C:\\Users\\Tu Nguyen\\.nuget\\packages\\",
-        "outputPath": "D:\\Visual project C#\\Clone\\Server-TT\\ServerAPI\\obj\\",
+        "projectPath": "G:\\React\\Server-TT\\ServerAPI\\ServerAPI.csproj",
+        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+        "outputPath": "G:\\React\\Server-TT\\ServerAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Tu Nguyen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
