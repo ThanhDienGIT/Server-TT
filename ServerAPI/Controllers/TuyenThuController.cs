@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ServerAPI.Models;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -47,7 +48,8 @@ namespace ServerAPI.Controllers
             SqlDataReader myReader;
 
             string selectFromString = @"select distinct Tuyenthu.IDTuyenThu, Tuyenthu.MaTuyenThu, 
-                    TuyenThu.TenTuyenThu, QuanHuyen.TenQuanHuyen, NhanVien.HoTen, 
+                    TuyenThu.TenTuyenThu, QuanHuyen.IDQuanHuyen, QuanHuyen.TenQuanHuyen, 
+                    NhanVien.IDNhanVien, NhanVien.HoTen, 
                     convert(varchar, NgayBatDau, 103) as NgayBatDau, 
                     convert(varchar, NgayKetThuc, 103) as NgayKetThuc
                 from dbo.TuyenThu 
@@ -86,120 +88,86 @@ namespace ServerAPI.Controllers
                 }
             }
             return new JsonResult(table);
-
-            //if (quanHuyen == -1 && xaPhuong == -1)
-            //{
-            //    string query = @"select distinct Tuyenthu.IDTuyenThu, Tuyenthu.MaTuyenThu, 
-            //            TuyenThu.TenTuyenThu, QuanHuyen.TenQuanHuyen, NhanVien.HoTen, 
-            //            convert(varchar, NgayBatDau, 103) as NgayBatDau, 
-            //            convert(varchar, NgayKetThuc, 103) as NgayKetThuc
-            //        from dbo.TuyenThu 
-            //        full outer join dbo.XaPhuong on TuyenThu.IDTuyenThu = XaPhuong.IDTuyenThu 
-            //        full outer join dbo.PhanTuyen on TuyenThu.IDTuyenThu = PhanTuyen.IDTuyenThu 
-	           //     full outer join dbo.QuanHuyen on QuanHuyen.IDQuanHuyen = PhanTuyen.IDQuanHuyen 
-            //            or QuanHuyen.IDQuanHuyen = XaPhuong.IDQuanHuyen
-            //        full outer join dbo.NhanVien on PhanTuyen.IDNhanVien = NhanVien.IDNhanVien
-            //        where TuyenThu.IDTuyenThu is not null ORDER BY TuyenThu.IDTuyenThu DESC";
-            //    using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            //    {
-            //        myCon.Open();
-            //        using (SqlCommand myCommand = new SqlCommand(query, myCon))
-            //        {
-            //            myReader = myCommand.ExecuteReader();
-            //            table.Load(myReader);
-
-            //            myReader.Close();
-            //            myCon.Close();
-            //        }
-            //    }
-            //    return new JsonResult(table);
-            //}
-            //else if (quanHuyen == -1 && xaPhuong != -1)
-            //{
-            //    string query = @"select distinct Tuyenthu.IDTuyenThu, Tuyenthu.MaTuyenThu, 
-            //            TuyenThu.TenTuyenThu, QuanHuyen.TenQuanHuyen, NhanVien.HoTen, 
-            //            convert(varchar, NgayBatDau, 103) as NgayBatDau, 
-            //            convert(varchar, NgayKetThuc, 103) as NgayKetThuc  
-            //        from dbo.TuyenThu 
-	           //     full outer join dbo.XaPhuong on TuyenThu.IDTuyenThu = XaPhuong.IDTuyenThu 
-            //        full outer join dbo.PhanTuyen on TuyenThu.IDTuyenThu = PhanTuyen.IDTuyenThu 
-	           //     full outer join dbo.QuanHuyen on QuanHuyen.IDQuanHuyen = PhanTuyen.IDQuanHuyen
-            //            or QuanHuyen.IDQuanHuyen = XaPhuong.IDQuanHuyen
-            //        full outer join dbo.NhanVien on PhanTuyen.IDNhanVien = NhanVien.IDNhanVien
-            //        where XaPhuong.IDXaPhuong=" + xaPhuong + @" 
-            //        AND TuyenThu.IDTuyenThu is not null ORDER BY TuyenThu.IDTuyenThu DESC";
-            //    using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            //    {
-            //        myCon.Open();
-            //        using (SqlCommand myCommand = new SqlCommand(query, myCon))
-            //        {
-            //            myReader = myCommand.ExecuteReader();
-            //            table.Load(myReader);
-
-            //            myReader.Close();
-            //            myCon.Close();
-            //        }
-            //    }
-            //    return new JsonResult(table);
-            //}
-            //else if (quanHuyen != -1 && xaPhuong == -1)
-            //{
-            //    string query = @"select distinct Tuyenthu.IDTuyenThu, Tuyenthu.MaTuyenThu,
-            //            TuyenThu.TenTuyenThu, QuanHuyen.TenQuanHuyen, NhanVien.HoTen, 
-            //            convert(varchar, NgayBatDau, 103) as NgayBatDau,
-            //            convert(varchar, NgayKetThuc, 103) as NgayKetThuc 
-            //        from dbo.TuyenThu 
-            //        full outer join dbo.XaPhuong on TuyenThu.IDTuyenThu = XaPhuong.IDTuyenThu 
-            //        full outer join dbo.PhanTuyen on TuyenThu.IDTuyenThu = PhanTuyen.IDTuyenThu 
-	           //     full outer join dbo.QuanHuyen on QuanHuyen.IDQuanHuyen = PhanTuyen.IDQuanHuyen
-            //            or QuanHuyen.IDQuanHuyen = XaPhuong.IDQuanHuyen
-            //        full outer join dbo.NhanVien on PhanTuyen.IDNhanVien = NhanVien.IDNhanVien
-            //        where QuanHuyen.IDQuanHuyen=" + quanHuyen +
-            //        @" AND TuyenThu.IDTuyenThu is not null ORDER BY TuyenThu.IDTuyenThu DESC";
-            //    using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            //    {
-            //        myCon.Open();
-            //        using (SqlCommand myCommand = new SqlCommand(query, myCon))
-            //        {
-            //            myReader = myCommand.ExecuteReader();
-            //            table.Load(myReader);
-
-            //            myReader.Close();
-            //            myCon.Close();
-            //        }
-            //    }
-            //    return new JsonResult(table);
-            //}
-            //else //if(quanHuyen != -1 && xaPhuong != -1)
-            //{
-            //    string query = @"select distinct Tuyenthu.IDTuyenThu, Tuyenthu.MaTuyenThu,
-            //            TuyenThu.TenTuyenThu, QuanHuyen.TenQuanHuyen, NhanVien.HoTen, 
-            //            convert(varchar, NgayBatDau, 103) as NgayBatDau,
-            //            convert(varchar, NgayKetThuc, 103) as NgayKetThuc 
-            //        from dbo.TuyenThu 
-            //        full outer join dbo.XaPhuong on TuyenThu.IDTuyenThu = XaPhuong.IDTuyenThu 
-            //        full outer join dbo.PhanTuyen on TuyenThu.IDTuyenThu = PhanTuyen.IDTuyenThu 
-	           //     full outer join dbo.QuanHuyen on QuanHuyen.IDQuanHuyen = PhanTuyen.IDQuanHuyen
-            //            or QuanHuyen.IDQuanHuyen = XaPhuong.IDQuanHuyen
-            //        full outer join dbo.NhanVien on PhanTuyen.IDNhanVien = NhanVien.IDNhanVien
-            //        where XaPhuong.IDXaPhuong=" + xaPhuong + @" and QuanHuyen.IDQuanHuyen=" + quanHuyen +
-            //        @" AND TuyenThu.IDTuyenThu is not null ORDER BY TuyenThu.IDTuyenThu DESC";
-            //    using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            //    {
-            //        myCon.Open();
-            //        using (SqlCommand myCommand = new SqlCommand(query, myCon))
-            //        {
-            //            myReader = myCommand.ExecuteReader();
-            //            table.Load(myReader);
-
-            //            myReader.Close();
-            //            myCon.Close();
-            //        }
-            //    }
-            //    return new JsonResult(table);
-            //}
         }
 
+
+
+
+        [HttpPut()]
+        public JsonResult Put(PhanTuyen pt)
+        {
+            string querySelect = "Select NgayBatDau, NgayKetThuc from dbo.PhanTuyen where IDTuyenThu = " + pt.IDTuyenThu;
+            string queryInsert = "Insert into dbo.PhanTuyen values(" + pt.IDNhanVien
+                + @"," + pt.IDTuyenThu + @"," + pt.IDQuanHuyen
+                + @", convert(varchar, SYSDATETIME(), 23) ,null)";
+
+            string queryUpdate1 = @"update dbo.PhanTuyen set IDNhanVien = " + pt.IDNhanVien
+                + @",  NgayBatDau = convert(varchar, SYSDATETIME(), 23)
+                where IDTuyenThu = " + pt.IDTuyenThu;
+            string queryUpdate2 = @"update dbo.PhanTuyen set IDNhanVien = " + pt.IDNhanVien
+                + @" where IDTuyenThu = " + pt.IDTuyenThu;
+
+            DataTable dt = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(querySelect, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    dt.Load(myReader);
+                    myReader.Close();
+                }
+                if (dt.Rows.Count > 0) 
+                {
+                    if (string.IsNullOrEmpty(dt.Rows[0][1].ToString()))
+                    {
+                        //Không thể update
+                        myCon.Close();
+                        return new JsonResult("Tuyến thu này đã kết thúc. Không thể chỉnh sửa");
+                    }
+                    else
+                    {
+                        //Có thể Update
+                        if (string.IsNullOrEmpty(dt.Rows[0][0].ToString()))
+                        {
+                            //Có Update NgayBD (Vì NgayBD Null)
+                            using (SqlCommand myCommand = new SqlCommand(queryUpdate1, myCon))
+                            {
+                                myReader = myCommand.ExecuteReader();
+                                myReader.Close();
+                                myCon.Close();
+                                return new JsonResult("Cập nhật tuyến thu thành công");
+                            }
+                        }
+                        else
+                        {
+                            //Không Update NgayBD
+                            using (SqlCommand myCommand = new SqlCommand(queryUpdate2, myCon))
+                            {
+                                myReader = myCommand.ExecuteReader();
+                                myReader.Close();
+                                myCon.Close();
+                                return new JsonResult("Cập nhật tuyến thu thành công");
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    //Insert
+                    using (SqlCommand myCommand = new SqlCommand(queryInsert, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                        myCon.Close();
+                        return new JsonResult("Cập nhật tuyến thu thành công");
+                    }
+                }
+            }
+        }
 
 
         [HttpDelete("{id}")]
