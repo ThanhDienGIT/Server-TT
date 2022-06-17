@@ -213,7 +213,7 @@ namespace ServerAPI.Controllers
                 (N'Kỳ thu tháng " + kt.Thang + @" năm " + kt.Nam + @"','" + kt.Thang + @"','" + kt.Nam + @"')";
             string query2 = @"Select IDKyThu from dbo.KyThu where 
                 Thang = " + kt.Thang + @" and Nam = " + kt.Nam;
-            string query3 = @"Select IDKhachHang, IDTuyenThu from dbo.KhachHang join dbo.XaPhuong on 
+            string query3 = @"Select IDKhachHang, IDTuyenThu, IDLoaiKhachHang from dbo.KhachHang join dbo.XaPhuong on 
                 dbo.KhachHang.IDXaPhuong = dbo.XaPhuong.IDXaPhuong where TrangThai = 1";
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
 
@@ -278,10 +278,11 @@ namespace ServerAPI.Controllers
                             IDPhieu = int.Parse(tableID.Rows[0][0].ToString());                   
                             int IDKH = int.Parse(table2.Rows[i][0].ToString());
                             int IDTuyen = int.Parse(table2.Rows[i][1].ToString());
+                            int IDMauSoPhieu = int.Parse(table2.Rows[i][2].ToString());
                             maSoPhieu = String.Concat(maSoPhieu, tableID.Rows[0][0].ToString,
                                 "MKH", IDKH, "D", DateTime.Today.ToString("ddMMyyyy"));
                             string query4 = @"insert into PhieuThu values (" + IDKH + @"," + IDTuyen + @",
-                                " + IDKyThu + @",null,'"+ maSoPhieu +@"',GETDATE(),null)";
+                                " + IDKyThu + @",null,'"+ maSoPhieu + @"','" + IDMauSoPhieu + @"',GETDATE(),null)";
                             using (SqlCommand myCommand = new SqlCommand(query4, myCon))
                             {
                                 myReader = myCommand.ExecuteReader();
