@@ -56,7 +56,7 @@ namespace ServerAPI.Controllers
 
             return new JsonResult(table);
         }
-
+        //lay thong tin khach hang tu idNhanVien
         [HttpGet("{idNhanVien}")]
         public JsonResult GetByStatus(int idNhanVien)
         {
