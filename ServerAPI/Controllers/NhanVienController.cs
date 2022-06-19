@@ -134,7 +134,7 @@ namespace ServerAPI.Controllers
         public JsonResult Delete(int id)
         {
             string query = @"
-                DELETE FROM dbo.NhanVien 
+                DELETE FROM dbo.PhanQuyen 
                 WHERE IDNhanVien = '" + id + @"'
                 ";
             DataTable table = new DataTable();
