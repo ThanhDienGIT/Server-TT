@@ -42,6 +42,36 @@ namespace ServerAPI.Controllers
             return new JsonResult(table);
         }
 
+        [HttpGet("{idNhanVien}")]
+        public JsonResult GetByStatus(int idNhanVien)
+        {
+            string query = @"
+                select * from QuanHuyen
+                join PhanTuyen on QuanHuyen.IDQuanHuyen = PhanTuyen.IDQuanHuyen
+                where IDNhanVien =" + idNhanVien
+            ;
+            DataTable table = new DataTable();
+
+            SqlDataReader myReader;
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+            myReader.Close();
+
+            return new JsonResult(table);
+        }
+
         [HttpPost]
         public JsonResult Post(QuanHuyen qh)
         {

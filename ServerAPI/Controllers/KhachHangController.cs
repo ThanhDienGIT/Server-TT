@@ -22,14 +22,18 @@ namespace ServerAPI.Controllers
             string query = @"
                 select KhachHang.IDKhachHang, KhachHang.HoTenKH, KhachHang.MaKhachHang, KhachHang.CCCD, KhachHang.NgayCap, KhachHang.NgayTao, 
                     KhachHang.NgayChinhSua,KhachHang.DiaChi, KhachHang.IDXaPhuong, XaPhuong.TenXaPhuong, XaPhuong.IDQuanHuyen, QuanHuyen.TenQuanHuyen,
-                    KhachHang.IDLoaiKhachHang, LoaiKhachHang.TenLoai, KhachHang.TrangThai
+                    KhachHang.IDLoaiKhachHang, LoaiKhachHang.TenLoai, KhachHang.TrangThai, PhanTuyen.IDNhanVien
                 from KhachHang
                 inner join XaPhuong
                 on KhachHang.IDXaPhuong = XaPhuong.IDXaPhuong
                 inner join QuanHuyen
                 on XaPhuong.IDQuanHuyen = QuanHuyen.IDQuanHuyen
                 inner join LoaiKhachHang
-                on KhachHang.IDLoaiKhachHang = LoaiKhachHang.IDLoaiKhachHang
+				on KhachHang.IDLoaiKhachHang = LoaiKhachHang.IDLoaiKhachHang
+				inner join TuyenThu 
+				on XaPhuong.IDTuyenThu = TuyenThu.IDTuyenThu
+				inner join PhanTuyen 
+				on PhanTuyen.IDTuyenThu = TuyenThu.IDTuyenThu
             ";
             DataTable table = new DataTable();
             
@@ -53,21 +57,25 @@ namespace ServerAPI.Controllers
             return new JsonResult(table);
         }
 
-        [HttpGet("{status}")]
-        public JsonResult GetByStatus(int status)
+        [HttpGet("{idNhanVien}")]
+        public JsonResult GetByStatus(int idNhanVien)
         {
             string query = @"
                 select KhachHang.IDKhachHang, KhachHang.HoTenKH, KhachHang.MaKhachHang, KhachHang.CCCD, KhachHang.NgayCap, KhachHang.NgayTao, 
                     KhachHang.NgayChinhSua,KhachHang.DiaChi, KhachHang.IDXaPhuong, XaPhuong.TenXaPhuong, XaPhuong.IDQuanHuyen, QuanHuyen.TenQuanHuyen,
-                    KhachHang.IDLoaiKhachHang, LoaiKhachHang.TenLoai, KhachHang.TrangThai
+                    KhachHang.IDLoaiKhachHang, LoaiKhachHang.TenLoai, KhachHang.TrangThai, PhanTuyen.IDNhanVien, TuyenThu.TenTuyenThu
                 from KhachHang
                 inner join XaPhuong
                 on KhachHang.IDXaPhuong = XaPhuong.IDXaPhuong
                 inner join QuanHuyen
                 on XaPhuong.IDQuanHuyen = QuanHuyen.IDQuanHuyen
                 inner join LoaiKhachHang
-                on KhachHang.IDLoaiKhachHang = LoaiKhachHang.IDLoaiKhachHang
-                where KhachHang.TrangThai = "+status
+				on KhachHang.IDLoaiKhachHang = LoaiKhachHang.IDLoaiKhachHang
+				inner join TuyenThu 
+				on XaPhuong.IDTuyenThu = TuyenThu.IDTuyenThu
+				inner join PhanTuyen 
+				on PhanTuyen.IDTuyenThu = TuyenThu.IDTuyenThu
+                where PhanTuyen.IDNhanVien = " + idNhanVien
             ;
             DataTable table = new DataTable();
 

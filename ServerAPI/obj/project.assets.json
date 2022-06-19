@@ -887,19 +887,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Tu Nguyen\\.nuget\\packages\\": {}
+    "C:\\Users\\nhaiv\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Visual project C#\\Clone\\Server-TT\\ServerAPI\\ServerAPI.csproj",
+      "projectUniqueName": "D:\\ThucTap\\Server-TT_Clone\\Server-TT\\ServerAPI\\ServerAPI.csproj",
       "projectName": "ServerAPI",
-      "projectPath": "D:\\Visual project C#\\Clone\\Server-TT\\ServerAPI\\ServerAPI.csproj",
-      "packagesPath": "C:\\Users\\Tu Nguyen\\.nuget\\packages\\",
-      "outputPath": "D:\\Visual project C#\\Clone\\Server-TT\\ServerAPI\\obj\\",
+      "projectPath": "D:\\ThucTap\\Server-TT_Clone\\Server-TT\\ServerAPI\\ServerAPI.csproj",
+      "packagesPath": "C:\\Users\\nhaiv\\.nuget\\packages\\",
+      "outputPath": "D:\\ThucTap\\Server-TT_Clone\\Server-TT\\ServerAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Tu Nguyen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\nhaiv\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

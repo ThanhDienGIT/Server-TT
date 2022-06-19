@@ -18,7 +18,11 @@ namespace ServerAPI.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            string query = @"select XaPhuong.IDXaPhuong, XaPhuong.TenXaPhuong, XaPhuong.IDQuanHuyen from XaPhuong";
+            string query = @"
+                            select XaPhuong.IDXaPhuong, XaPhuong.TenXaPhuong, XaPhuong.IDQuanHuyen ,QuanHuyen.TenQuanHuyen 
+                            from XaPhuong
+                            join QuanHuyen on XaPhuong.IDQuanHuyen = QuanHuyen.IDQuanHuyen
+                            ";
             DataTable table = new DataTable();
             SqlDataReader myReader;
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
@@ -40,12 +44,13 @@ namespace ServerAPI.Controllers
             return new JsonResult(table);
         }
 
-        [HttpGet("{idQuanHuyen}")]
-        public JsonResult GetByStatus(int idQuanHuyen)
+        [HttpGet("getbyidemp/{idNhanVien}")]
+        public JsonResult GetByStatus(int idNhanVien)
         {
             string query = @"
-                select XaPhuong.IDXaPhuong, XaPhuong.TenXaPhuong, XaPhuong.IDQuanHuyen from XaPhuong
-                where XaPhuong.IDQuanHuyen = " +idQuanHuyen;
+                select * from XaPhuong
+                inner join PhanTuyen on XaPhuong.IDTuyenThu = PhanTuyen.IDTuyenThu
+                where IDNhanVien = " + idNhanVien;
             DataTable table = new DataTable();
 
             SqlDataReader myReader;

@@ -19,109 +19,154 @@ namespace ServerAPI.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            string query = @"Select * from NhanVien";
+            string query = @"select * from dbo.NhanVien ";
             DataTable table = new DataTable();
-            clsDatabase.OpenConnection();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
-            SqlCommand myCommand = new SqlCommand(query, clsDatabase.con);
-            myReader = myCommand.ExecuteReader();
-            table.Load(myReader);
-            myReader.Close();
-            clsDatabase.CloseConnection();
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
             return new JsonResult(table);
         }
-        
-          
+
+
         [HttpGet("{id}")]
         public JsonResult GetByID(string id)
         {
-            string strSelectID = "select * from NhanVien where TaiKhoan = @username";
-            clsDatabase.OpenConnection();
-            SqlCommand sqlCommand = new SqlCommand(strSelectID, clsDatabase.con);
+            string query = "select * from NhanVien where TaiKhoan = @username";
             SqlParameter username = new SqlParameter("username", SqlDbType.VarChar);
             username.Value = id;
-            sqlCommand.Parameters.Add(username);
-            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
             int IDstaff = 0;
-            if (sqlDataReader.Read())
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {
-              IDstaff = sqlDataReader.GetInt32(0);
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.Add(username);
+                    myReader = myCommand.ExecuteReader();
+
+                    if (myReader.Read())
+                    {
+                        IDstaff = myReader.GetInt32(0);
+                    }
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
             }
-            sqlDataReader.Close();
-            clsDatabase.CloseConnection();
             return new JsonResult(IDstaff);
         }
 
         [HttpGet("getinfobyID/{ad}")]
         public JsonResult getinfobyID(int ad)
         {
-            string strSelectID = "select * from NhanVien where IdNhanVien = @username";
-            clsDatabase.OpenConnection();
-            SqlCommand sqlCommand = new SqlCommand(strSelectID, clsDatabase.con);
+            string query = "select * from NhanVien where IdNhanVien = @username";
             SqlParameter username = new SqlParameter("username", SqlDbType.Int);
             username.Value = ad;
-            sqlCommand.Parameters.Add(username);
-            SqlDataReader sqlDataReader1;
-            DataTable data1 = new DataTable();
-            sqlDataReader1= sqlCommand.ExecuteReader();
-            data1.Load(sqlDataReader1);
-            sqlDataReader1.Close();
-            clsDatabase.CloseConnection();
-            return new JsonResult(data1);
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.Add(username);
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+            return new JsonResult(table);
         }
+
+
         [HttpGet("getmastership/{ul}")]
         public JsonResult getmastership(int ul)
         {
-            string strSelectID = "select * from PhanQuyen where IDNhanVien = @username";
-            clsDatabase.OpenConnection();
-            SqlCommand sqlCommand = new SqlCommand(strSelectID, clsDatabase.con);
+            string query = "select * from PhanQuyen where IDNhanVien = @username";
             SqlParameter username = new SqlParameter("username", SqlDbType.Int);
             username.Value = ul;
-            sqlCommand.Parameters.Add(username);
-            SqlDataReader sqlDataReader2;
-            DataTable data2 = new DataTable();
-            sqlDataReader2 = sqlCommand.ExecuteReader();
-            data2.Load(sqlDataReader2);
-            sqlDataReader2.Close();
-            clsDatabase.CloseConnection();
-            return new JsonResult(data2);
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.Add(username);
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+            return new JsonResult(table);
+
+
+
+
+
         }
 
         [HttpPost]
         public JsonResult Post(Login login)
         {
-            string query = @"Select * from NhanVien";
-            DataTable table = new DataTable();
-            clsDatabase.OpenConnection();
+            string query = @"select * from dbo.NhanVien ";
+            bool UsernameTest = false;
+            bool PasswordTest = false;
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
-            SqlCommand myCommand = new SqlCommand(query, clsDatabase.con);
-            myReader = myCommand.ExecuteReader();
-            bool tk = false;
-            bool mk = false;
-            while (myReader.Read())
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {
-               if(myReader.GetString(10) == login.Username)
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    tk = true;
-                }
-               if(myReader.GetString(11) == login.Password)
-                {
-                    mk = true;
+                    myReader = myCommand.ExecuteReader();
+                    while (myReader.Read())
+                    {
+                        if (myReader.GetString(10) == login.Username)
+                        {
+                            UsernameTest = true;
+                        }
+
+                        if (myReader.GetString(11) == login.Password)
+                        {
+                            PasswordTest = true;
+                        }
+                    }
+                    myReader.Close();
+                    myCon.Close();
                 }
             }
-            myReader.Close();
-            if (tk == true && mk == true)
+            if (UsernameTest == true && PasswordTest == true)
             {
                 return new JsonResult("Connect");
             }
             else
             {
-                return new JsonResult("Failed Connect");
+                return new JsonResult("Username Not Valid");
             }
-            
+
         }
 
-        
+
 
 
     }

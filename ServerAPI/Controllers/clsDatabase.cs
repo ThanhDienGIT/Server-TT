@@ -15,7 +15,7 @@ namespace ServerAPI.Controllers
         {
             try
             {
-                con = new SqlConnection("Data Source=DESKTOP-KVUS3GB\\SQLEXPRESS;Initial Catalog=QLMoiTruongDoThi; Integrated Security=true");
+                con = new SqlConnection("Data Source=DESKTOP-1R7APBJ\\SQLEXPRESS;Initial Catalog=QLMoiTruongDoThi; Integrated Security=true");
                 con.Open();
             }
             catch (Exception)
