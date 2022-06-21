@@ -177,7 +177,7 @@ namespace ServerAPI.Controllers
 
                     string queryGetMax = "Select cast(max(" +
                             "substring(MaTuyenThu," + (maTuyenThu.Length + 1) + @",50)) as INT) + 1" 
-                        + "from TuyenThu where MaTuyenThu like '%"+ maTuyenThu + @"%'";
+                        + "from TuyenThu where MaTuyenThu like N'%"+ maTuyenThu + @"%'";
                     DataTable maxMaTuyenThu = new DataTable();
                     using (SqlCommand myCommand = new SqlCommand(queryGetMax, myCon))
                     {
@@ -195,7 +195,6 @@ namespace ServerAPI.Controllers
                         maxID = string.Concat("0",maxID);
                     }
                     maTuyenThu = string.Concat(maTuyenThu, maxID);
-
                     string tenTuyen = string.Join(" - ", xaPhuongChosenList);
 
                     //Insert Tuyen Thu
@@ -209,7 +208,7 @@ namespace ServerAPI.Controllers
 
                     //Update IDTuyenThu trong dbo.XaPhuong
                     string queryGetIDTuyenThu = "Select IDTuyenThu from TuyenThu " +
-                        "where MaTuyenThu='" + maTuyenThu +"'";
+                        "where MaTuyenThu=N'" + maTuyenThu +"'";
                     DataTable tblIDTuyenThu = new DataTable();
                     using (SqlCommand myCommand = new SqlCommand(queryGetIDTuyenThu, myCon))
                     {
