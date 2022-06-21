@@ -90,8 +90,146 @@ namespace ServerAPI.Controllers
             return new JsonResult(table);
         }
 
+        [HttpPost("{idQuanHuyen}")]
+        public JsonResult Post(int idQuanHuyen, string[] xaPhuongChosenList)
+        {
+            string queryCheck = "Select TenXaPhuong from dbo.XaPhuong where IDTuyenThu is not null and (";
+            string whereString = "";
+            for(int i = 1; i <= xaPhuongChosenList.Length; i++)
+            {
+                if(i != xaPhuongChosenList.Length)
+                {
+                    whereString = string.Concat(whereString, "TenXaPhuong=N'", xaPhuongChosenList[i-1], "' or ");
+                }
+                else
+                {
+                    whereString = string.Concat(whereString, "TenXaPhuong=N'", xaPhuongChosenList[i-1], "')");
+                }
 
+            }
+            queryCheck = string.Concat(queryCheck, whereString);
 
+            DataTable dt = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(queryCheck, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    dt.Load(myReader);
+                    myReader.Close();
+                }
+
+                if (dt.Rows.Count > 0)
+                {
+                    string result = "Tồn tại xã phường đã có tuyến thu: ";
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        if (i != dt.Rows.Count - 1)
+                        {
+                            result = string.Concat(result, dt.Rows[i][0], ", ");
+                        }
+                        else
+                        {
+                            result = string.Concat(result, dt.Rows[i][0], ".");
+                        }
+
+                    }
+                    myCon.Close();
+                    return new JsonResult(result);
+                }
+                else
+                {
+                    string tenQuanHuyen = "";
+                    string queryGetTenQuanHuyen = "Select TenQuanHuyen from QuanHuyen " +
+                        "where IDQuanHuyen = " + idQuanHuyen;
+                    DataTable tblTenQuanHuyen = new DataTable();
+                    using (SqlCommand myCommand = new SqlCommand(queryGetTenQuanHuyen, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        tblTenQuanHuyen.Load(myReader);
+                        myReader.Close();
+                    }
+                    tenQuanHuyen = tblTenQuanHuyen.Rows[0][0].ToString();
+
+                    //Lay Viet tat ten Quan Huyen
+                    string subStr;
+                    int countSpace = 0;
+                    for (int i = 0; i < tenQuanHuyen.Length; i++)
+                    {
+                        subStr = tenQuanHuyen.Substring(i, 1);
+                        if (subStr == " ")
+                            countSpace++;
+                    }
+                    int[] spaceIndex = new int[countSpace];
+                    int curSpaceIndex = -1;
+                    string maTuyenThu = "";
+                    for (int i = 0; i < spaceIndex.Length; i++)
+                    {
+                        spaceIndex[i] = tenQuanHuyen.IndexOf(" ", curSpaceIndex + 1);
+                        curSpaceIndex = spaceIndex[i];
+                        maTuyenThu = string.Concat(maTuyenThu, 
+                            tenQuanHuyen.Substring(curSpaceIndex + 1, 1));
+                    }
+
+                    string queryGetMax = "Select cast(max(" +
+                            "substring(MaTuyenThu," + (maTuyenThu.Length + 1) + @",50)) as INT) + 1" 
+                        + "from TuyenThu where MaTuyenThu like '%"+ maTuyenThu + @"%'";
+                    DataTable maxMaTuyenThu = new DataTable();
+                    using (SqlCommand myCommand = new SqlCommand(queryGetMax, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        maxMaTuyenThu.Load(myReader);
+                        myReader.Close();
+                    }
+                    string maxID = maxMaTuyenThu.Rows[0][0].ToString();
+                    if(maxID.Length == 0)
+                    {
+                        maxID = "1";
+                    }
+                    for(int i=0; i<=3-maxID.Length; i++)
+                    {
+                        maxID = string.Concat("0",maxID);
+                    }
+                    maTuyenThu = string.Concat(maTuyenThu, maxID);
+
+                    string tenTuyen = string.Join(" - ", xaPhuongChosenList);
+
+                    //Insert Tuyen Thu
+                    string queryInsertTT = "Insert into TuyenThu values(N'" + maTuyenThu + @"',N'"
+                        + tenTuyen + @"')";
+                    using (SqlCommand myCommand = new SqlCommand(queryInsertTT, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                    }
+
+                    //Update IDTuyenThu trong dbo.XaPhuong
+                    string queryGetIDTuyenThu = "Select IDTuyenThu from TuyenThu " +
+                        "where MaTuyenThu='" + maTuyenThu +"'";
+                    DataTable tblIDTuyenThu = new DataTable();
+                    using (SqlCommand myCommand = new SqlCommand(queryGetIDTuyenThu, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        tblIDTuyenThu.Load(myReader);
+                        myReader.Close();
+                    }
+                    int idTuyenThu = int.Parse(tblIDTuyenThu.Rows[0][0].ToString());
+                    string queryUpdate = "Update XaPhuong set IDTuyenThu = "+ idTuyenThu +@" where (";
+                    string queryUpdateXP = string.Concat(queryUpdate, whereString);
+                    using (SqlCommand myCommand = new SqlCommand(queryUpdateXP, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                        myCon.Close();
+                        return new JsonResult("Added Successfully");
+                    }
+                }
+            }
+        }
 
         [HttpPut()]
         public JsonResult Put(PhanTuyen pt)
@@ -173,8 +311,6 @@ namespace ServerAPI.Controllers
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
-            string query = @"Update dbo.PhanTuyen set NgayKetThuc = convert(varchar, SYSDATETIME(), 23) 
-                where IDTuyenThu = " + id;
             string query2 = @"Select * from dbo.TuyenThu
                 full outer join dbo.PhanTuyen on TuyenThu.IDTuyenThu = PhanTuyen.IDTuyenThu 
                 where NgayKetThuc is not null and TuyenThu.IDTuyenThu = " + id;
@@ -215,13 +351,39 @@ namespace ServerAPI.Controllers
                                 myReader.Close();
                             }
                         }
-                        using (SqlCommand delTuyenThuCommand = new SqlCommand(query, myCon))
+
+                        string queryCheckExist = "Select * from dbo.PhanTuyen where IDTuyenThu = " + id;
+                        DataTable dt = new DataTable();
+                        using (SqlCommand checkExistPhanTuyenCommand = new SqlCommand(queryCheckExist, myCon))
                         {
-                            myReader = delTuyenThuCommand.ExecuteReader();
+                            myReader = checkExistPhanTuyenCommand.ExecuteReader();
+                            dt.Load(myReader);
                             myReader.Close();
-                            myCon.Close();
                         }
-                        return new JsonResult("Tuyến thu đã được kết thúc thành công");
+                        if(dt.Rows.Count > 0)
+                        {
+                            string query = @"Update dbo.PhanTuyen 
+                            set NgayKetThuc = convert(varchar, SYSDATETIME(), 23) 
+                            where IDTuyenThu = " + id;
+                            using (SqlCommand delTuyenThuCommand = new SqlCommand(query, myCon))
+                            {
+                                myReader = delTuyenThuCommand.ExecuteReader();
+                                myReader.Close();
+                                myCon.Close();
+                            }
+                            return new JsonResult("Tuyến thu đã được kết thúc thành công");
+                        }
+                        else
+                        {
+                            string query = @"Delete from dbo.TuyenThu where IDTuyenThu = " + id;
+                            using (SqlCommand delTuyenThuCommand = new SqlCommand(query, myCon))
+                            {
+                                myReader = delTuyenThuCommand.ExecuteReader();
+                                myReader.Close();
+                                myCon.Close();
+                            }
+                            return new JsonResult("Tuyến thu đã được kết thúc thành công");
+                        }
                     }
                 }
             }
