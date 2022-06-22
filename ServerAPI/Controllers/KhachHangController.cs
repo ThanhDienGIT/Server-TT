@@ -34,6 +34,7 @@ namespace ServerAPI.Controllers
 				on XaPhuong.IDTuyenThu = TuyenThu.IDTuyenThu
 				inner join PhanTuyen 
 				on PhanTuyen.IDTuyenThu = TuyenThu.IDTuyenThu
+                order by KhachHang.TrangThai desc
             ";
             DataTable table = new DataTable();
             
@@ -74,8 +75,10 @@ namespace ServerAPI.Controllers
 				inner join TuyenThu 
 				on XaPhuong.IDTuyenThu = TuyenThu.IDTuyenThu
 				inner join PhanTuyen 
-				on PhanTuyen.IDTuyenThu = TuyenThu.IDTuyenThu
-                where PhanTuyen.IDNhanVien = " + idNhanVien
+				on PhanTuyen.IDTuyenThu = TuyenThu.IDTuyenThu             
+                where PhanTuyen.IDNhanVien = " + idNhanVien +
+                "order by KhachHang.TrangThai desc"
+
             ;
             DataTable table = new DataTable();
 
@@ -108,14 +111,22 @@ namespace ServerAPI.Controllers
 
             string checkQuery = @"select * from KhachHang where CCCD = '" + kh.CCCD + "'";
 
+            string getIDKyThuQuery = @"select IDKyThu from KyThu where Thang = Month (SYSDATETIME()) and Nam = Year (SYSDATETIME())";
+
             string getIDQuery = @"SELECT IDENT_CURRENT('KhachHang') + 1";
+
+            string getIDTuyenThuQuery = @"select IDTuyenThu from XaPhuong where IDTuyenThu IS NOT NULL and IDXaPhuong = " + kh.IDXaPhuong;
 
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
 
             DataTable checkCCCD = new DataTable();
 
             DataTable maxID = new DataTable();
-           
+
+            DataTable IDTuyenThu = new DataTable();
+
+            DataTable maxIDKyThu = new DataTable();
+
             DataTable table = new DataTable();
 
             SqlDataReader myReader;
@@ -123,51 +134,105 @@ namespace ServerAPI.Controllers
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {
                 myCon.Open();
-                      
-               
+                                
                 using (SqlCommand myCommand = new SqlCommand(checkQuery, myCon))
                 {
                     myReader = myCommand.ExecuteReader();
                     checkCCCD.Load(myReader);
                     myReader.Close();
                 }
-                
-                if (checkCCCD.Rows.Count > 0)
+
+                using (SqlCommand myCommand = new SqlCommand(getIDTuyenThuQuery, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    IDTuyenThu.Load(myReader);
+                    myReader.Close();
+                }
+
+                if (IDTuyenThu.Rows.Count == 0)
                 {
                     myCon.Close();
-                    return new JsonResult("CCCD đã tồn tại");                
+                    return new JsonResult("Không Thể Thêm Khách Hàng Do Chưa tồn tại tuyến thu ở địa chỉ hiện tại");                
                 }
                 else
                 {
-                    using (SqlCommand myCommand = new SqlCommand(getIDQuery, myCon))
+                    if (checkCCCD.Rows.Count == 0)
                     {
-                        myReader = myCommand.ExecuteReader();
-                        maxID.Load(myReader);
-                        myReader.Close();
-                    }
+                        using (SqlCommand myCommand = new SqlCommand(getIDQuery, myCon))
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            maxID.Load(myReader);
+                            myReader.Close();
+                        }
 
-                    string MaxIDKhachHang = maxID.Rows[0][0].ToString();
-                    int SoMaxIDKhachHang = 6 - MaxIDKhachHang.Length;
+                        string MaxIDKhachHang = maxID.Rows[0][0].ToString();
+                        int SoMaxIDKhachHang = 6 - MaxIDKhachHang.Length;
 
-                    for (int i = 0; i < (SoMaxIDKhachHang); i++)
-                    {
-                        maKH = String.Concat(maKH, "0");
-                    }
-                    maKH = String.Concat(maKH, MaxIDKhachHang);
+                        using (SqlCommand myCommand = new SqlCommand(getIDKyThuQuery, myCon))
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            maxIDKyThu.Load(myReader);
+                            myReader.Close();
+                        }
 
-                    string query = @"insert into dbo.KhachHang values
-                    (" + kh.IDXaPhuong + @"," + kh.IDLoaiKhachHang + @",'" + maKH + @"',N'" + kh.HoTenKH + @"',N'" + kh.DiaChi + @"','" + kh.CCCD + @"','" + kh.NgayCap + @"','"
-                    + kh.NgayTao + @"',null,1)";
+                        int SoMaxIDKyThu = int.Parse(maxIDKyThu.Rows[0][0].ToString());
+                        int SoIDTuyenThu = int.Parse(IDTuyenThu.Rows[0][0].ToString());
+                        int IDPhieu = 0;
+                        string maSoPhieu = "PT";
 
-                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                    {
-                        myReader = myCommand.ExecuteReader();
-                        table.Load(myReader);
+                        string getIDPhieuQuery = "select IDENT_CURRENT('PhieuThu') + 1";
 
-                        myReader.Close();
+                        DataTable IDPhieuthu = new DataTable();
+
+                        using (SqlCommand myCommand = new SqlCommand(getIDPhieuQuery, myCon))
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            IDPhieuthu.Load(myReader);
+                            myReader.Close();
+                        }
+
+                        maSoPhieu = String.Concat(maSoPhieu, IDPhieuthu.Rows[0][0].ToString(),
+                                "MKH", MaxIDKhachHang, "D", DateTime.Today.ToString("ddMMyyyy"));
+
+                        IDPhieu = int.Parse(IDPhieuthu.Rows[0][0].ToString());
+
+                        for (int i = 0; i < (SoMaxIDKhachHang); i++)
+                        {
+                            maKH = String.Concat(maKH, "0");
+                        }
+                        maKH = String.Concat(maKH, MaxIDKhachHang);
+
+                        string formattedNgayCap = kh.NgayCap.ToString("yyyy-MM-dd");
+
+                        string query = @"insert into dbo.KhachHang values
+                    (" + kh.IDXaPhuong + @"," + kh.IDLoaiKhachHang + @",'" + maKH + @"',N'" + kh.HoTenKH + @"',N'" + kh.DiaChi + @"','" + kh.CCCD + @"','" + formattedNgayCap + @"',GETDATE()"
+                        +@",null,1)";
+                        using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            table.Load(myReader);
+                            myReader.Close();
+                                                   
+                        }
+
+                        string queryThemPhieuThu = @"insert into PhieuThu values (" + MaxIDKhachHang + @"," + SoIDTuyenThu + @"," + SoMaxIDKyThu + @",null,'" + maSoPhieu + "',"+ kh.IDLoaiKhachHang + @",GETDATE(),null)";
+
+                        Console.WriteLine(queryThemPhieuThu);
+                        using (SqlCommand myCommand = new SqlCommand(queryThemPhieuThu, myCon))
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            myReader.Close();
+                        }
+
+
                         myCon.Close();
-                        return new JsonResult("Thêm Khách Hàng Thành Công");
+                        return new JsonResult("Thêm Khách Hàng Và Tuyến Thu Thành Công");
                     }
+                    else
+                    {
+                        myCon.Close();
+                        return new JsonResult("Căn Cước Công Dân Đã Tồn Tại");
+                    }                
                 }              
             }
         }
@@ -180,9 +245,11 @@ namespace ServerAPI.Controllers
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
 
             DataTable checkCCCD = new DataTable();
+            string formattedNgayCap = kh.NgayCap.ToString("yyyy-MM-dd");
 
             string query = @"update KhachHang 
-                            set IDXaPhuong = '" + kh.IDXaPhuong + "', HoTenKH = N'" + kh.HoTenKH + "', DiaChi = N'" + kh.DiaChi + "', CCCD = '" + kh.CCCD + "', NgayCap = '" + kh.NgayCap + "', NgayChinhSua = '" + kh.NgayChinhSua + "', IDLoaiKhachHang = '" + kh.IDLoaiKhachHang  + "' where IDKhachHang =" + kh.IDKhachHang ;
+                            set IDXaPhuong = '" + kh.IDXaPhuong + "', HoTenKH = N'" + kh.HoTenKH + "', DiaChi = N'" + kh.DiaChi + "', CCCD = '" + kh.CCCD + "', NgayCap = '" + formattedNgayCap + "', NgayChinhSua = " + "GETDATE()" + ", IDLoaiKhachHang = '" + kh.IDLoaiKhachHang  + "' where IDKhachHang =" + kh.IDKhachHang ;
+            Console.WriteLine(query);
             DataTable table = new DataTable();
 
             SqlDataReader myReader;
