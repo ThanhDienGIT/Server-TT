@@ -164,37 +164,9 @@ namespace ServerAPI.Controllers
                             maxID.Load(myReader);
                             myReader.Close();
                         }
-
+                 
                         string MaxIDKhachHang = maxID.Rows[0][0].ToString();
-                        int SoMaxIDKhachHang = 6 - MaxIDKhachHang.Length;
-
-                        using (SqlCommand myCommand = new SqlCommand(getIDKyThuQuery, myCon))
-                        {
-                            myReader = myCommand.ExecuteReader();
-                            maxIDKyThu.Load(myReader);
-                            myReader.Close();
-                        }
-
-                        int SoMaxIDKyThu = int.Parse(maxIDKyThu.Rows[0][0].ToString());
-                        int SoIDTuyenThu = int.Parse(IDTuyenThu.Rows[0][0].ToString());
-                        int IDPhieu = 0;
-                        string maSoPhieu = "PT";
-
-                        string getIDPhieuQuery = "select IDENT_CURRENT('PhieuThu') + 1";
-
-                        DataTable IDPhieuthu = new DataTable();
-
-                        using (SqlCommand myCommand = new SqlCommand(getIDPhieuQuery, myCon))
-                        {
-                            myReader = myCommand.ExecuteReader();
-                            IDPhieuthu.Load(myReader);
-                            myReader.Close();
-                        }
-
-                        maSoPhieu = String.Concat(maSoPhieu, IDPhieuthu.Rows[0][0].ToString(),
-                                "MKH", MaxIDKhachHang, "D", DateTime.Today.ToString("ddMMyyyy"));
-
-                        IDPhieu = int.Parse(IDPhieuthu.Rows[0][0].ToString());
+                        int SoMaxIDKhachHang = 6 - MaxIDKhachHang.Length;                     
 
                         for (int i = 0; i < (SoMaxIDKhachHang); i++)
                         {
@@ -214,19 +186,56 @@ namespace ServerAPI.Controllers
                             myReader.Close();
                                                    
                         }
-
-                        string queryThemPhieuThu = @"insert into PhieuThu values (" + MaxIDKhachHang + @"," + SoIDTuyenThu + @"," + SoMaxIDKyThu + @",null,'" + maSoPhieu + "',"+ kh.IDLoaiKhachHang + @",GETDATE(),null)";
-
-                        Console.WriteLine(queryThemPhieuThu);
-                        using (SqlCommand myCommand = new SqlCommand(queryThemPhieuThu, myCon))
+                      
+                        using (SqlCommand myCommand = new SqlCommand(getIDKyThuQuery, myCon))
                         {
                             myReader = myCommand.ExecuteReader();
+                            maxIDKyThu.Load(myReader);
                             myReader.Close();
                         }
+                        int SoMaxIDKyThu = 0;
+                        if (maxIDKyThu.Rows.Count != 0)
+                        {
+                            SoMaxIDKyThu = int.Parse(maxIDKyThu.Rows[0][0].ToString());
+                        }
 
+                        if (SoMaxIDKyThu != 0)
+                        {                      
+                            int SoIDTuyenThu = int.Parse(IDTuyenThu.Rows[0][0].ToString());
+                            int IDPhieu = 0;
+                            string maSoPhieu = "PT";
 
-                        myCon.Close();
-                        return new JsonResult("Thêm Khách Hàng Và Tuyến Thu Thành Công");
+                            string getIDPhieuQuery = "select IDENT_CURRENT('PhieuThu') + 1";
+
+                            DataTable IDPhieuthu = new DataTable();
+
+                            using (SqlCommand myCommand = new SqlCommand(getIDPhieuQuery, myCon))
+                            {
+                                myReader = myCommand.ExecuteReader();
+                                IDPhieuthu.Load(myReader);
+                                myReader.Close();
+                            }
+
+                            maSoPhieu = String.Concat(maSoPhieu, IDPhieuthu.Rows[0][0].ToString(),
+                                    "MKH", MaxIDKhachHang, "D", DateTime.Today.ToString("ddMMyyyy"));
+
+                            IDPhieu = int.Parse(IDPhieuthu.Rows[0][0].ToString());
+
+                            string queryThemPhieuThu = @"insert into PhieuThu values (" + MaxIDKhachHang + @"," + SoIDTuyenThu + @"," + SoMaxIDKyThu + @",null,'" + maSoPhieu + "'," + kh.IDLoaiKhachHang + @",GETDATE(),null)";
+                            
+                            using (SqlCommand myCommand = new SqlCommand(queryThemPhieuThu, myCon))
+                            {
+                                myReader = myCommand.ExecuteReader();
+                                myReader.Close();
+                            }
+                            myCon.Close();
+                            return new JsonResult("Thêm Khách Hàng Và Phiếu Thu Thành Công");
+                        }
+                        else
+                        {
+                            myCon.Close();
+                            return new JsonResult("Thêm Khách Hàng Thành Công");
+                        }                   
                     }
                     else
                     {

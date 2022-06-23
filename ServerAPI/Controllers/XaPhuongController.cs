@@ -94,7 +94,7 @@ namespace ServerAPI.Controllers
                 }
             }
 
-            return new JsonResult("Added Successfully");
+            return new JsonResult("Thêm Xã Phường Thành Công");
         }
 
         [HttpDelete]
