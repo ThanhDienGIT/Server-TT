@@ -139,7 +139,13 @@ namespace ServerAPI.Controllers
 
                     }
                     myCon.Close();
-                    return new JsonResult(result);
+                    return new JsonResult(new
+                    {
+                        severit = "warning",
+                        message = result
+                    }
+                    );
+
                 }
                 else
                 {
@@ -224,7 +230,12 @@ namespace ServerAPI.Controllers
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
-                        return new JsonResult("Added Successfully");
+                        return new JsonResult(new
+                        {
+                            severit = "success",
+                            message = "Thêm tuyến thu thành công"
+                        }
+                        );
                     }
                 }
             }
@@ -263,7 +274,12 @@ namespace ServerAPI.Controllers
                     {
                         //Không thể update
                         myCon.Close();
-                        return new JsonResult("Tuyến thu này đã kết thúc. Không thể chỉnh sửa");
+                        return new JsonResult(new
+                        {
+                            severit = "warning",
+                            message = "Tuyến thu này đã kết thúc. Không thể chỉnh sửa"
+                        }
+                        );
                     }
                     else
                     {
@@ -276,7 +292,12 @@ namespace ServerAPI.Controllers
                                 myReader = myCommand.ExecuteReader();
                                 myReader.Close();
                                 myCon.Close();
-                                return new JsonResult("Cập nhật tuyến thu thành công");
+                                return new JsonResult(new
+                                {
+                                    severit = "success",
+                                    message = "Cập nhật tuyến thu thành công"
+                                }
+                                );
                             }
                         }
                         else
@@ -287,7 +308,12 @@ namespace ServerAPI.Controllers
                                 myReader = myCommand.ExecuteReader();
                                 myReader.Close();
                                 myCon.Close();
-                                return new JsonResult("Cập nhật tuyến thu thành công");
+                                return new JsonResult(new
+                                {
+                                    severit = "success",
+                                    message = "Cập nhật tuyến thu thành công"
+                                }
+                                );
                             }
                         }
                     }
@@ -300,7 +326,12 @@ namespace ServerAPI.Controllers
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
-                        return new JsonResult("Cập nhật tuyến thu thành công");
+                        return new JsonResult(new
+                        {
+                            severit = "success",
+                            message = "Cập nhật tuyến thu thành công"
+                        }
+                        );
                     }
                 }
             }
@@ -327,7 +358,12 @@ namespace ServerAPI.Controllers
                     myReader.Close();
                     if (dataTable.Rows.Count > 0)
                     {
-                        return new JsonResult("Tuyến thu này đã kết thúc. Không thể thực hiện thao tác này");
+                        return new JsonResult(new
+                        {
+                            severit = "success",
+                            message = "Tuyến thu này đã kết thúc. Không thể thực hiện thao tác này"
+                        }
+                        );
                     }
                     else
                     {
@@ -370,7 +406,12 @@ namespace ServerAPI.Controllers
                                 myReader.Close();
                                 myCon.Close();
                             }
-                            return new JsonResult("Tuyến thu đã được kết thúc thành công");
+                            return new JsonResult(new
+                            {
+                                severit = "success",
+                                message = "Tuyến thu đã được kết thúc thành công"
+                            }
+                            );
                         }
                         else
                         {
@@ -381,7 +422,12 @@ namespace ServerAPI.Controllers
                                 myReader.Close();
                                 myCon.Close();
                             }
-                            return new JsonResult("Tuyến thu đã được kết thúc thành công");
+                            return new JsonResult(new
+                            {
+                                severit = "success",
+                                message = "Tuyến thu đã được kết thúc thành công"
+                            }
+                            );
                         }
                     }
                 }

@@ -164,46 +164,6 @@ namespace ServerAPI.Controllers
         }
 
 
-        [HttpPost()]
-        public JsonResult Post(KyThu kt)
-        {
-            string queryCheck = "Select * from dbo.KyThu where Thang = " + kt.Thang + @" and Nam =" + kt.Nam;
-            DataTable dt = new DataTable();
-
-            string query = @"insert into dbo.KyThu values
-                (N'Kỳ thu tháng " + kt.Thang + @" năm " + kt.Nam + @"','" + kt.Thang + @"','" + kt.Nam + @"')";
-            string sqlDataSource = _configuration.GetConnectionString("DBCon");
-            SqlDataReader myReader;
-
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(queryCheck, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    dt.Load(myReader);
-                    myReader.Close();
-                }
-
-                if(dt.Rows.Count > 0)
-                {
-                    myCon.Close();
-                    return new JsonResult("Đã tồn tại kỳ thu tháng " + kt.Thang + " năm " + kt.Nam);
-                }
-                else
-                {
-                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                    {
-                        myReader = myCommand.ExecuteReader();
-                        myReader.Close();
-                        myCon.Close();
-                        return new JsonResult("Added Successfully");
-                    }
-                }
-            }
-
-        }
-
         [HttpPost("{status}")]
         public JsonResult Post(KyThu kt, bool status)
         {
@@ -291,7 +251,12 @@ namespace ServerAPI.Controllers
                         }
                         myCon.Close();
                     }
-                    return new JsonResult("Thêm kỳ thu thành công");
+                    return new JsonResult(new
+                    {
+                        severit = "success",
+                        message = "Thêm kỳ thu thành công"
+                    }
+                    );
                 }
             }
         }
@@ -318,7 +283,12 @@ namespace ServerAPI.Controllers
                 if(dt.Rows.Count > 0)
                 {
                     myCon.Close();
-                    return new JsonResult("Không thể chỉnh sửa. Đã tồn tại kỳ thu tháng " + kt.Thang + " năm " + kt.Nam);
+                    return new JsonResult(new
+                    {
+                        severity = "warning",
+                        message = "Không thể chỉnh sửa. Đã tồn tại kỳ thu tháng " + kt.Thang + " năm " + kt.Nam
+                    }
+                    );
                 }
                 else
                 {
@@ -327,7 +297,12 @@ namespace ServerAPI.Controllers
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
-                        return new JsonResult("Cập nhật thông tin kỳ thu thành công");
+                        return new JsonResult(new
+                        {
+                            severit = "success",
+                            message = "Cập nhật thông tin kỳ thu thành công"
+                        }
+                        );
                     }
                 }
             }
@@ -351,7 +326,12 @@ namespace ServerAPI.Controllers
                     myReader.Close();
                     if(dataTable.Rows.Count > 0)
                     {
-                        return new JsonResult("Tồn tại phiếu thu đã được thu trong kỳ thu này. Không thể xoá kỳ thu");
+                        return new JsonResult(new
+                        {
+                            severity = "warning",
+                            message = "Tồn tại phiếu thu đã được thu trong kỳ thu này.Không thể xoá kỳ thu"
+                        }
+                        );
                     }
                     else
                     {
@@ -369,7 +349,12 @@ namespace ServerAPI.Controllers
                             myReader.Close();
                             myCon.Close();
                         }
-                        return new JsonResult("Xoá kỳ thu thành công");
+                        return new JsonResult(new
+                        {
+                            severit = "success",
+                            message = "Xoá kỳ thu thành công"
+                        }
+                        );
                     }
                 }
             }
