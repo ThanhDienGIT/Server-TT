@@ -361,8 +361,12 @@ namespace ServerAPI.Controllers
         public JsonResult Post(PhieuThu pt)
         {
             string getMaxIDPhieuQuery = "select IDENT_CURRENT('PhieuThu') + 1";
+            string getIDLoaiKhachHang = "select IDLoaiKhachHang from KhachHang " +
+                "where IDKhachHang = " + pt.IDKhachHang;
             int maxIDPhieu = 0;
+            int IDLoaiKH = 0;
             DataTable dt = new DataTable();
+            DataTable dtIDLoai = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
 
@@ -375,11 +379,19 @@ namespace ServerAPI.Controllers
                     dt.Load(myReader);
                     myReader.Close();
                 }
+                using (SqlCommand myCommand = new SqlCommand(getIDLoaiKhachHang, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    dtIDLoai.Load(myReader);
+                    myReader.Close();
+                }
+
                 maxIDPhieu = int.Parse(dt.Rows[0][0].ToString());
+                IDLoaiKH = int.Parse(dtIDLoai.Rows[0][0].ToString());
                 string maSoPhieu = "PT" + dt.Rows[0][0].ToString() + "MKH" + pt.IDKhachHang + "D" + DateTime.Today.ToString("ddMMyyyy");
                 string query = @"insert into PhieuThu values (" + pt.IDKhachHang + @",
                         " + pt.IDTuyenThu + @"," + pt.IDKyThu + @",null,
-                        '" + maSoPhieu + @"',GETDATE(),null)";
+                        '" + maSoPhieu + @"','" + IDLoaiKH + @"',GETDATE(),null)";
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myReader = myCommand.ExecuteReader();

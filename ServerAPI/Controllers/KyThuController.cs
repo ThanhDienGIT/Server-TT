@@ -164,6 +164,7 @@ namespace ServerAPI.Controllers
         }
 
 
+<<<<<<< HEAD
         [HttpPost()]
         public JsonResult Post(KyThu kt)
         {
@@ -204,6 +205,8 @@ namespace ServerAPI.Controllers
 
         }
 
+=======
+>>>>>>> b998ebfce2954506c4c42f949b6f6b946e50d037
         [HttpPost("{status}")]
         public JsonResult Post(KyThu kt, bool status)
         {
@@ -213,7 +216,7 @@ namespace ServerAPI.Controllers
                 (N'Kỳ thu tháng " + kt.Thang + @" năm " + kt.Nam + @"','" + kt.Thang + @"','" + kt.Nam + @"')";
             string query2 = @"Select IDKyThu from dbo.KyThu where 
                 Thang = " + kt.Thang + @" and Nam = " + kt.Nam;
-            string query3 = @"Select IDKhachHang, IDTuyenThu from dbo.KhachHang join dbo.XaPhuong on 
+            string query3 = @"Select IDKhachHang, IDTuyenThu, IDLoaiKhachHang from dbo.KhachHang join dbo.XaPhuong on 
                 dbo.KhachHang.IDXaPhuong = dbo.XaPhuong.IDXaPhuong where TrangThai = 1";
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
 
@@ -278,10 +281,15 @@ namespace ServerAPI.Controllers
                             IDPhieu = int.Parse(tableID.Rows[0][0].ToString());
                             int IDKH = int.Parse(table2.Rows[i][0].ToString());
                             int IDTuyen = int.Parse(table2.Rows[i][1].ToString());
+                            int IDMauSoPhieu = int.Parse(table2.Rows[i][2].ToString());
                             maSoPhieu = String.Concat(maSoPhieu, tableID.Rows[0][0].ToString,
                                 "MKH", IDKH, "D", DateTime.Today.ToString("ddMMyyyy"));
                             string query4 = @"insert into PhieuThu values (" + IDKH + @"," + IDTuyen + @",
+<<<<<<< HEAD
                                 " + IDKyThu + @",null,'" + maSoPhieu + @"',GETDATE(),null)";
+=======
+                                " + IDKyThu + @",null,'"+ maSoPhieu + @"','" + IDMauSoPhieu + @"',GETDATE(),null)";
+>>>>>>> b998ebfce2954506c4c42f949b6f6b946e50d037
                             using (SqlCommand myCommand = new SqlCommand(query4, myCon))
                             {
                                 myReader = myCommand.ExecuteReader();
@@ -290,7 +298,12 @@ namespace ServerAPI.Controllers
                         }
                         myCon.Close();
                     }
-                    return new JsonResult("Thêm kỳ thu thành công");
+                    return new JsonResult(new
+                    {
+                        severity = "success",
+                        message = "Thêm kỳ thu thành công"
+                    }
+                    );
                 }
             }
         }
@@ -317,7 +330,12 @@ namespace ServerAPI.Controllers
                 if (dt.Rows.Count > 0)
                 {
                     myCon.Close();
-                    return new JsonResult("Không thể chỉnh sửa. Đã tồn tại kỳ thu tháng " + kt.Thang + " năm " + kt.Nam);
+                    return new JsonResult(new
+                    {
+                        severity = "warning",
+                        message = "Không thể chỉnh sửa. Đã tồn tại kỳ thu tháng " + kt.Thang + " năm " + kt.Nam
+                    }
+                    );
                 }
                 else
                 {
@@ -326,7 +344,12 @@ namespace ServerAPI.Controllers
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
-                        return new JsonResult("Cập nhật thông tin kỳ thu thành công");
+                        return new JsonResult(new
+                        {
+                            severity = "success",
+                            message = "Cập nhật thông tin kỳ thu thành công"
+                        }
+                        );
                     }
                 }
             }
@@ -350,7 +373,12 @@ namespace ServerAPI.Controllers
                     myReader.Close();
                     if (dataTable.Rows.Count > 0)
                     {
-                        return new JsonResult("Tồn tại phiếu thu đã được thu trong kỳ thu này. Không thể xoá kỳ thu");
+                        return new JsonResult(new
+                        {
+                            severity = "warning",
+                            message = "Tồn tại phiếu thu đã được thu trong kỳ thu này.Không thể xoá kỳ thu"
+                        }
+                        );
                     }
                     else
                     {
@@ -368,7 +396,12 @@ namespace ServerAPI.Controllers
                             myReader.Close();
                             myCon.Close();
                         }
-                        return new JsonResult("Xoá kỳ thu thành công");
+                        return new JsonResult(new
+                        {
+                            severity = "success",
+                            message = "Xoá kỳ thu thành công"
+                        }
+                        );
                     }
                 }
             }

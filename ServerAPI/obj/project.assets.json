@@ -887,11 +887,16 @@
     ]
   },
   "packageFolders": {
+<<<<<<< HEAD
     "C:\\Users\\nhaiv\\.nuget\\packages\\": {}
+=======
+    "C:\\Users\\Administrator\\.nuget\\packages\\": {}
+>>>>>>> b998ebfce2954506c4c42f949b6f6b946e50d037
   },
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< HEAD
 <<<<<<< HEAD
       "projectUniqueName": "D:\\Thực tập - Project\\Server-TT\\Server-TT\\ServerAPI\\ServerAPI.csproj",
       "projectName": "ServerAPI",
@@ -908,6 +913,16 @@
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\nhaiv\\AppData\\Roaming\\NuGet\\NuGet.Config",
+=======
+      "projectUniqueName": "G:\\React\\Server-TT\\ServerAPI\\ServerAPI.csproj",
+      "projectName": "ServerAPI",
+      "projectPath": "G:\\React\\Server-TT\\ServerAPI\\ServerAPI.csproj",
+      "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+      "outputPath": "G:\\React\\Server-TT\\ServerAPI\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+>>>>>>> b998ebfce2954506c4c42f949b6f6b946e50d037
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

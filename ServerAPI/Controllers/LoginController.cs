@@ -65,10 +65,14 @@ namespace ServerAPI.Controllers
                     table.Load(myReader);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                     myReader.Close(); 
 =======
                     myReader.Close();
 >>>>>>> c5fdbcbdcf20295325ab91c7ba48a869c1d11039
+=======
+                    myReader.Close();
+>>>>>>> b998ebfce2954506c4c42f949b6f6b946e50d037
                     myCon.Close();
                 }
             }
