@@ -67,6 +67,29 @@ namespace ServerAPI.Controllers
 
             return new JsonResult(table);
         }
+        [HttpGet("getlastempid")]
+        public JsonResult GetLastEmpID()
+        {
+            string query = @"SELECT TOP 1 IDNhanVien FROM dbo.NhanVien ORDER BY IDNhanVien DESC";
+            DataTable table = new DataTable();
+
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
         [HttpPost]
         public JsonResult Post(NhanVien emp)
         {
@@ -134,7 +157,7 @@ namespace ServerAPI.Controllers
         public JsonResult Delete(int id)
         {
             string query = @"
-                DELETE FROM dbo.NhanVien 
+                DELETE FROM dbo.PhanQuyen 
                 WHERE IDNhanVien = '" + id + @"'
                 ";
             DataTable table = new DataTable();
