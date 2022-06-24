@@ -77,7 +77,7 @@ namespace ServerAPI.Controllers
         public JsonResult Post(XaPhuong xp)
         {
             string
-                query = @"insert into XaPhuong values(N'"+xp.TenXaPhuong+"',"+xp.IDQuanHuyen+",null);";
+                query = @"insert into XaPhuong values(N'" + xp.TenXaPhuong + "'," + xp.IDQuanHuyen + ",null);";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
