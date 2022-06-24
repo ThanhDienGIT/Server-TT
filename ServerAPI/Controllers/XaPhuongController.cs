@@ -18,7 +18,11 @@ namespace ServerAPI.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            string query = @"select XaPhuong.IDXaPhuong, XaPhuong.TenXaPhuong, XaPhuong.IDQuanHuyen from XaPhuong";
+            string query = @"
+                            select XaPhuong.IDXaPhuong, XaPhuong.TenXaPhuong, XaPhuong.IDQuanHuyen ,QuanHuyen.TenQuanHuyen 
+                            from XaPhuong
+                            join QuanHuyen on XaPhuong.IDQuanHuyen = QuanHuyen.IDQuanHuyen
+                            ";
             DataTable table = new DataTable();
             SqlDataReader myReader;
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
@@ -40,12 +44,13 @@ namespace ServerAPI.Controllers
             return new JsonResult(table);
         }
 
-        [HttpGet("{idQuanHuyen}")]
-        public JsonResult GetByStatus(int idQuanHuyen)
+        [HttpGet("getbyidemp/{idNhanVien}")]
+        public JsonResult GetByStatus(int idNhanVien)
         {
             string query = @"
-                select XaPhuong.IDXaPhuong, XaPhuong.TenXaPhuong, XaPhuong.IDQuanHuyen from XaPhuong
-                where XaPhuong.IDQuanHuyen = " +idQuanHuyen;
+                select * from XaPhuong
+                inner join PhanTuyen on XaPhuong.IDTuyenThu = PhanTuyen.IDTuyenThu
+                where IDNhanVien = " + idNhanVien;
             DataTable table = new DataTable();
 
             SqlDataReader myReader;
@@ -72,7 +77,7 @@ namespace ServerAPI.Controllers
         public JsonResult Post(XaPhuong xp)
         {
             string
-                query = @"insert into XaPhuong values(N'"+xp.TenXaPhuong+"',"+xp.IDQuanHuyen+",null);";
+                query = @"insert into XaPhuong values(N'" + xp.TenXaPhuong + "'," + xp.IDQuanHuyen + ",null);";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
@@ -89,7 +94,7 @@ namespace ServerAPI.Controllers
                 }
             }
 
-            return new JsonResult("Added Successfully");
+            return new JsonResult("Thêm Xã Phường Thành Công");
         }
 
         [HttpDelete]
