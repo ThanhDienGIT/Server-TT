@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vw8EowPNcTpuekQfEzyd6O6ZzdiMayyaQ9qH+S8JuKZBRqGM1f9G86nnekUWzDTaDXd/s2GOEZgZlzqAHyZyFA==",
+  "dgSpecHash": "6b7dU7AD6/a9qt3LS3riNFtt5Y4/eX76BLyBBmb9BZcpiv3sNaDn1Ybz2+369gBgrMEoCGYgx4C65AMwiU0aKQ==",
   "success": true,
-  "projectFilePath": "D:\\Server-TT\\Server-TT\\ServerAPI\\ServerAPI.csproj",
+  "projectFilePath": "D:\\Thực tập - Project\\Server-TT\\Server-TT\\ServerAPI\\ServerAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Tu Nguyen\\.nuget\\packages\\easyencryption\\1.0.2\\easyencryption.1.0.2.nupkg.sha512",
     "C:\\Users\\Tu Nguyen\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\6.0.5\\microsoft.aspnetcore.jsonpatch.6.0.5.nupkg.sha512",
