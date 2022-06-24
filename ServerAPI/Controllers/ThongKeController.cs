@@ -1,17 +1,15 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ServerAPI.Models;
 using System.Data;
 using System.Data.SqlClient;
-
 namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LoginController : ControllerBase
+    public class ThongKeController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        public LoginController(IConfiguration configuration)
+        public ThongKeController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -19,7 +17,7 @@ namespace ServerAPI.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            string query = @"select * from dbo.NhanVien ";
+            string query = @"select * from KyThu order by Nam,Thang";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
@@ -39,14 +37,10 @@ namespace ServerAPI.Controllers
             return new JsonResult(table);
         }
 
-
-        [HttpGet("{id}")]
-        public JsonResult GetByID(string id)
+        [HttpGet("GetPhieuThu")]
+        public JsonResult GetPhieuThu()
         {
-            string query = "select * from NhanVien where TaiKhoan = @username";
-            SqlParameter username = new SqlParameter("username", SqlDbType.VarChar);
-            username.Value = id;
-            int IDstaff = 0;
+            string query = @"select * from PhieuThu";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
@@ -55,119 +49,143 @@ namespace ServerAPI.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.Add(username);
                     myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
 
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
+
+        [HttpGet("GetNamKyThu")]
+        public JsonResult GetNamKyThu()
+        {
+            string query = @"select DISTINCT Nam from KyThu";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
+
+        [HttpGet("GetCountNhanVien")]
+        public JsonResult GetCountNhanVien()
+        {
+            string query = @"select count(IDNhanVien) as NhanVien from NhanVien";
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            int NhanVien = 0;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
                     if (myReader.Read())
                     {
-                        IDstaff = myReader.GetInt32(0);
+                        NhanVien = myReader.GetInt32(0);
                     }
-                    table.Load(myReader);
-
-                    myReader.Close(); 
-                    myCon.Close();
-                }
-            }
-            return new JsonResult(IDstaff);
-        }
-
-        [HttpGet("getinfobyID/{ad}")]
-        public JsonResult getinfobyID(int ad)
-        {
-            string query = "select * from NhanVien where IdNhanVien = @username";
-            SqlParameter username = new SqlParameter("username", SqlDbType.Int);
-            username.Value = ad;
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("DBCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.Add(username);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
+                   
                     myReader.Close();
                     myCon.Close();
                 }
             }
-            return new JsonResult(table);
+
+            return new JsonResult(NhanVien);
         }
-
-
-        [HttpGet("getmastership/{ul}")]
-        public JsonResult getmastership(int ul)
+        [HttpGet("GetCountTuyenThu")]
+        public JsonResult GetCountTuyenThu()
         {
-            string query = "select * from PhanQuyen where IDNhanVien = @username";
-            SqlParameter username = new SqlParameter("username", SqlDbType.Int);
-            username.Value = ul;
+            string query = @"select count(IDTuyenThu) as TuyenThu from TuyenThu";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.Add(username);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-            return new JsonResult(table);
-
-
-
-
-
-        }
-
-        [HttpPost]
-        public JsonResult Post(Login login)
-        {
-            string query = @"select * from dbo.NhanVien ";
-            bool UsernameTest = false;
-            bool PasswordTest = false;
-            string sqlDataSource = _configuration.GetConnectionString("DBCon");
-            SqlDataReader myReader;
+            int TuyenThu = 0;
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myReader = myCommand.ExecuteReader();
-                    while (myReader.Read())
+                    if (myReader.Read())
                     {
-                        if (myReader.GetString(10) == login.Username)
-                        {
-                            UsernameTest = true;
-                        }
-
-                        if (myReader.GetString(11) == login.Password)
-                        {
-                            PasswordTest = true;
-                        }
+                        TuyenThu = myReader.GetInt32(0);
                     }
+
                     myReader.Close();
                     myCon.Close();
                 }
             }
-            if (UsernameTest == true && PasswordTest == true)
-            {
-                return new JsonResult("Connect");
-            }
-            else
-            {
-                return new JsonResult("Username Not Valid");
-            }
 
+            return new JsonResult(TuyenThu);
         }
+        [HttpGet("GetCountKhachHang")]
+        public JsonResult GetCountKhachHang()
+        {
+            string query = @"select count(IDKhachHang) as KhachHang from KhachHang";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            int KhachHang = 0;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    if (myReader.Read())
+                    {
+                        KhachHang = myReader.GetInt32(0);
+                    }
 
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
 
+            return new JsonResult(KhachHang);
+        }
+        [HttpGet("GetCountKyThu")]
+        public JsonResult GetCountKyThu()
+        {
+            string query = @"select count(IDKyThu) as KyThu from KyThu";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            int KyThu = 0;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    if (myReader.Read())
+                    {
+                        KyThu = myReader.GetInt32(0);
+                    }
 
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
 
+            return new JsonResult(KyThu);
+        }
+       
     }
 }
