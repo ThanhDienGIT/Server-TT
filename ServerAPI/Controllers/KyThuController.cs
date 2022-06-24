@@ -62,7 +62,7 @@ namespace ServerAPI.Controllers
 
             return new JsonResult(table);
         }
-            
+
         [HttpGet("{id}")]
         public JsonResult GetByID(int id)
         {
@@ -92,7 +92,7 @@ namespace ServerAPI.Controllers
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
 
-            if(nam == -1 && thang == -1)
+            if (nam == -1 && thang == -1)
             {
                 string query = @"select * from dbo.KyThu ORDER BY nam ASC, thang ASC";
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -109,9 +109,9 @@ namespace ServerAPI.Controllers
                 }
                 return new JsonResult(table);
             }
-            else if(nam == -1 && thang != -1)
+            else if (nam == -1 && thang != -1)
             {
-                string query = @"select * from dbo.KyThu where thang="+ thang +@"ORDER BY nam ASC, thang ASC";
+                string query = @"select * from dbo.KyThu where thang=" + thang + @"ORDER BY nam ASC, thang ASC";
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
                     myCon.Open();
@@ -125,8 +125,8 @@ namespace ServerAPI.Controllers
                     }
                 }
                 return new JsonResult(table);
-            } 
-            else if(nam != -1 && thang == -1)
+            }
+            else if (nam != -1 && thang == -1)
             {
                 string query = @"select * from dbo.KyThu where nam=" + nam + @" ORDER BY nam ASC, thang ASC";
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -145,7 +145,7 @@ namespace ServerAPI.Controllers
             }
             else //if(nam != -1 && thang != -1)
             {
-                string query = @"select * from dbo.KyThu where thang=" + thang + 
+                string query = @"select * from dbo.KyThu where thang=" + thang +
                     @" and nam=" + nam + @" ORDER BY nam ASC, thang ASC";
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
@@ -185,7 +185,7 @@ namespace ServerAPI.Controllers
                     myReader.Close();
                 }
 
-                if(dt.Rows.Count > 0)
+                if (dt.Rows.Count > 0)
                 {
                     myCon.Close();
                     return new JsonResult("Đã tồn tại kỳ thu tháng " + kt.Thang + " năm " + kt.Nam);
@@ -275,13 +275,13 @@ namespace ServerAPI.Controllers
                                 tableID.Load(myReader);
                                 myReader.Close();
                             }
-                            IDPhieu = int.Parse(tableID.Rows[0][0].ToString());                   
+                            IDPhieu = int.Parse(tableID.Rows[0][0].ToString());
                             int IDKH = int.Parse(table2.Rows[i][0].ToString());
                             int IDTuyen = int.Parse(table2.Rows[i][1].ToString());
                             maSoPhieu = String.Concat(maSoPhieu, tableID.Rows[0][0].ToString,
                                 "MKH", IDKH, "D", DateTime.Today.ToString("ddMMyyyy"));
                             string query4 = @"insert into PhieuThu values (" + IDKH + @"," + IDTuyen + @",
-                                " + IDKyThu + @",null,'"+ maSoPhieu +@"',GETDATE(),null)";
+                                " + IDKyThu + @",null,'" + maSoPhieu + @"',GETDATE(),null)";
                             using (SqlCommand myCommand = new SqlCommand(query4, myCon))
                             {
                                 myReader = myCommand.ExecuteReader();
@@ -314,7 +314,7 @@ namespace ServerAPI.Controllers
                     dt.Load(myReader);
                     myReader.Close();
                 }
-                if(dt.Rows.Count > 0)
+                if (dt.Rows.Count > 0)
                 {
                     myCon.Close();
                     return new JsonResult("Không thể chỉnh sửa. Đã tồn tại kỳ thu tháng " + kt.Thang + " năm " + kt.Nam);
@@ -348,7 +348,7 @@ namespace ServerAPI.Controllers
                     myReader = myCommand.ExecuteReader();
                     dataTable.Load(myReader);
                     myReader.Close();
-                    if(dataTable.Rows.Count > 0)
+                    if (dataTable.Rows.Count > 0)
                     {
                         return new JsonResult("Tồn tại phiếu thu đã được thu trong kỳ thu này. Không thể xoá kỳ thu");
                     }
