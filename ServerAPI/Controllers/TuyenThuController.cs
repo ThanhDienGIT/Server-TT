@@ -141,7 +141,7 @@ namespace ServerAPI.Controllers
                     myCon.Close();
                     return new JsonResult(new
                     {
-                        severit = "warning",
+                        severity = "warning",
                         message = result
                     }
                     );
@@ -232,7 +232,7 @@ namespace ServerAPI.Controllers
                         myCon.Close();
                         return new JsonResult(new
                         {
-                            severit = "success",
+                            severity = "success",
                             message = "Thêm tuyến thu thành công"
                         }
                         );
@@ -270,13 +270,13 @@ namespace ServerAPI.Controllers
                 }
                 if (dt.Rows.Count > 0) 
                 {
-                    if (string.IsNullOrEmpty(dt.Rows[0][1].ToString()))
+                    if (!string.IsNullOrEmpty(dt.Rows[0][1].ToString()))
                     {
                         //Không thể update
                         myCon.Close();
                         return new JsonResult(new
                         {
-                            severit = "warning",
+                            severity = "warning",
                             message = "Tuyến thu này đã kết thúc. Không thể chỉnh sửa"
                         }
                         );
@@ -294,7 +294,7 @@ namespace ServerAPI.Controllers
                                 myCon.Close();
                                 return new JsonResult(new
                                 {
-                                    severit = "success",
+                                    severity = "success",
                                     message = "Cập nhật tuyến thu thành công"
                                 }
                                 );
@@ -310,7 +310,7 @@ namespace ServerAPI.Controllers
                                 myCon.Close();
                                 return new JsonResult(new
                                 {
-                                    severit = "success",
+                                    severity = "success",
                                     message = "Cập nhật tuyến thu thành công"
                                 }
                                 );
@@ -328,7 +328,7 @@ namespace ServerAPI.Controllers
                         myCon.Close();
                         return new JsonResult(new
                         {
-                            severit = "success",
+                            severity = "success",
                             message = "Cập nhật tuyến thu thành công"
                         }
                         );
@@ -360,7 +360,7 @@ namespace ServerAPI.Controllers
                     {
                         return new JsonResult(new
                         {
-                            severit = "success",
+                            severity = "success",
                             message = "Tuyến thu này đã kết thúc. Không thể thực hiện thao tác này"
                         }
                         );
@@ -408,7 +408,7 @@ namespace ServerAPI.Controllers
                             }
                             return new JsonResult(new
                             {
-                                severit = "success",
+                                severity = "success",
                                 message = "Tuyến thu đã được kết thúc thành công"
                             }
                             );
@@ -424,7 +424,7 @@ namespace ServerAPI.Controllers
                             }
                             return new JsonResult(new
                             {
-                                severit = "success",
+                                severity = "success",
                                 message = "Tuyến thu đã được kết thúc thành công"
                             }
                             );

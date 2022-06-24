@@ -253,7 +253,7 @@ namespace ServerAPI.Controllers
                     }
                     return new JsonResult(new
                     {
-                        severit = "success",
+                        severity = "success",
                         message = "Thêm kỳ thu thành công"
                     }
                     );
@@ -299,7 +299,7 @@ namespace ServerAPI.Controllers
                         myCon.Close();
                         return new JsonResult(new
                         {
-                            severit = "success",
+                            severity = "success",
                             message = "Cập nhật thông tin kỳ thu thành công"
                         }
                         );
@@ -351,7 +351,7 @@ namespace ServerAPI.Controllers
                         }
                         return new JsonResult(new
                         {
-                            severit = "success",
+                            severity = "success",
                             message = "Xoá kỳ thu thành công"
                         }
                         );
