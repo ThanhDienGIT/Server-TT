@@ -887,19 +887,27 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Tu Nguyen\\.nuget\\packages\\": {}
+    "C:\\Users\\nhaiv\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Server-TT\\Server-TT\\ServerAPI\\ServerAPI.csproj",
+<<<<<<< HEAD
+      "projectUniqueName": "D:\\Thực tập - Project\\Server-TT\\Server-TT\\ServerAPI\\ServerAPI.csproj",
       "projectName": "ServerAPI",
-      "projectPath": "D:\\Server-TT\\Server-TT\\ServerAPI\\ServerAPI.csproj",
+      "projectPath": "D:\\Thực tập - Project\\Server-TT\\Server-TT\\ServerAPI\\ServerAPI.csproj",
       "packagesPath": "C:\\Users\\Tu Nguyen\\.nuget\\packages\\",
-      "outputPath": "D:\\Server-TT\\Server-TT\\ServerAPI\\obj\\",
+      "outputPath": "D:\\Thực tập - Project\\Server-TT\\Server-TT\\ServerAPI\\obj\\",
+=======
+      "projectUniqueName": "D:\\ThucTap\\Server-TT_Clone\\Server-TT\\ServerAPI\\ServerAPI.csproj",
+      "projectName": "ServerAPI",
+      "projectPath": "D:\\ThucTap\\Server-TT_Clone\\Server-TT\\ServerAPI\\ServerAPI.csproj",
+      "packagesPath": "C:\\Users\\nhaiv\\.nuget\\packages\\",
+      "outputPath": "D:\\ThucTap\\Server-TT_Clone\\Server-TT\\ServerAPI\\obj\\",
+>>>>>>> c5fdbcbdcf20295325ab91c7ba48a869c1d11039
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Tu Nguyen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\nhaiv\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

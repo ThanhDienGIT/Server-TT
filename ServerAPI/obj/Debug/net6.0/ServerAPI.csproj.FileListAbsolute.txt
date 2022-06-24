@@ -73,6 +73,7 @@ D:\Visual project C#\Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.pdb
 D:\Visual project C#\Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.genruntimeconfig.cache
 D:\Visual project C#\Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ref\ServerAPI.dll
 D:\Visual project C#\Clone\Server-TT\ServerAPI\bin\Debug\net6.0\EasyEncryption.dll
+<<<<<<< HEAD
 D:\Server-TT\Server-TT\ServerAPI\bin\Debug\net6.0\appsettings.Development.json
 D:\Server-TT\Server-TT\ServerAPI\bin\Debug\net6.0\appsettings.json
 D:\Server-TT\Server-TT\ServerAPI\bin\Debug\net6.0\ServerAPI.exe
@@ -111,3 +112,43 @@ D:\Server-TT\Server-TT\ServerAPI\obj\Debug\net6.0\refint\ServerAPI.dll
 D:\Server-TT\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.pdb
 D:\Server-TT\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.genruntimeconfig.cache
 D:\Server-TT\Server-TT\ServerAPI\obj\Debug\net6.0\ref\ServerAPI.dll
+=======
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\appsettings.Development.json
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\appsettings.json
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\ServerAPI.exe
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\ServerAPI.deps.json
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\ServerAPI.runtimeconfig.json
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\ServerAPI.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\ServerAPI.pdb
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\EasyEncryption.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\Microsoft.OpenApi.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\System.Data.SqlClient.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\runtimes\win-arm64\native\sni.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\runtimes\win-x64\native\sni.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\runtimes\win-x86\native\sni.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.csproj.AssemblyReference.cache
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.GeneratedMSBuildEditorConfig.editorconfig
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.AssemblyInfoInputs.cache
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.AssemblyInfo.cs
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.csproj.CoreCompileInputs.cache
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.MvcApplicationPartsAssemblyInfo.cs
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.MvcApplicationPartsAssemblyInfo.cache
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\obj\Debug\net6.0\staticwebassets.build.json
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\obj\Debug\net6.0\staticwebassets.development.json
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\obj\Debug\net6.0\scopedcss\bundle\ServerAPI.styles.css
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.csproj.CopyComplete
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\obj\Debug\net6.0\refint\ServerAPI.dll
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.pdb
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.genruntimeconfig.cache
+D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ref\ServerAPI.dll
+>>>>>>> c5fdbcbdcf20295325ab91c7ba48a869c1d11039
