@@ -160,7 +160,7 @@ namespace ServerAPI.Controllers
                 DiaChi = N'" + emp.DiaChi + @"',
                 CCCD = '" + emp.CCCD + @"',
                 TaiKhoan = '" + emp.TaiKhoan + @"',
-                MatKhau = '" + EasyEncryption.MD5.ComputeMD5Hash(emp.MatKhau) + @"' 
+                MatKhau = '" + emp.MatKhau + @"' 
                 WHERE IDNhanVien = '" + emp.IDNhanVien + @"'
                 ";
             DataTable table = new DataTable();
