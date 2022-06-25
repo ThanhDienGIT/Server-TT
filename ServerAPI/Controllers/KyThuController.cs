@@ -164,7 +164,7 @@ namespace ServerAPI.Controllers
         }
 
 
-<<<<<<< HEAD
+
         [HttpPost()]
         public JsonResult Post(KyThu kt)
         {
@@ -205,8 +205,7 @@ namespace ServerAPI.Controllers
 
         }
 
-=======
->>>>>>> b998ebfce2954506c4c42f949b6f6b946e50d037
+
         [HttpPost("{status}")]
         public JsonResult Post(KyThu kt, bool status)
         {
@@ -285,11 +284,9 @@ namespace ServerAPI.Controllers
                             maSoPhieu = String.Concat(maSoPhieu, tableID.Rows[0][0].ToString,
                                 "MKH", IDKH, "D", DateTime.Today.ToString("ddMMyyyy"));
                             string query4 = @"insert into PhieuThu values (" + IDKH + @"," + IDTuyen + @",
-<<<<<<< HEAD
-                                " + IDKyThu + @",null,'" + maSoPhieu + @"',GETDATE(),null)";
-=======
+
                                 " + IDKyThu + @",null,'"+ maSoPhieu + @"','" + IDMauSoPhieu + @"',GETDATE(),null)";
->>>>>>> b998ebfce2954506c4c42f949b6f6b946e50d037
+
                             using (SqlCommand myCommand = new SqlCommand(query4, myCon))
                             {
                                 myReader = myCommand.ExecuteReader();

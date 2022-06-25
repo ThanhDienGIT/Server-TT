@@ -67,20 +67,11 @@ namespace ServerAPI.Controllers
 
             return new JsonResult(table);
         }
-<<<<<<< HEAD
+
         [HttpGet("getlastempid")]
         public JsonResult GetLastEmpID()
         {
             string query = @"SELECT TOP 1 IDNhanVien FROM dbo.NhanVien ORDER BY IDNhanVien DESC";
-=======
-
-        [HttpGet("quyen/{id}")]
-        public JsonResult GetByQuyen(int id)
-        {
-            string query = @"select * from dbo.NhanVien 
-                join dbo.PhanQuyen on NhanVien.IDNhanVien = PhanQuyen.IDNhanVien 
-                where IDQuyen = " + id;
->>>>>>> b998ebfce2954506c4c42f949b6f6b946e50d037
             DataTable table = new DataTable();
 
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
@@ -92,10 +83,7 @@ namespace ServerAPI.Controllers
                 {
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
-<<<<<<< HEAD
 
-=======
->>>>>>> b998ebfce2954506c4c42f949b6f6b946e50d037
                     myReader.Close();
                     myCon.Close();
                 }
@@ -103,10 +91,33 @@ namespace ServerAPI.Controllers
 
             return new JsonResult(table);
         }
-<<<<<<< HEAD
-=======
 
->>>>>>> b998ebfce2954506c4c42f949b6f6b946e50d037
+        [HttpGet("quyen/{id}")]
+        public JsonResult GetByQuyen(int id)
+        {
+            string query = @"select * from dbo.NhanVien 
+                join dbo.PhanQuyen on NhanVien.IDNhanVien = PhanQuyen.IDNhanVien 
+                where IDQuyen = " + id;
+            DataTable table = new DataTable();
+
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
+
         [HttpPost]
         public JsonResult Post(NhanVien emp)
         {

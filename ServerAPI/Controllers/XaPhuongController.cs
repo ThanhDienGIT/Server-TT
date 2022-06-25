@@ -44,6 +44,34 @@ namespace ServerAPI.Controllers
             return new JsonResult(table);
         }
 
+        [HttpGet("{idQuanHuyen}")]
+        public JsonResult GetByStatus1(int idQuanHuyen)
+        {
+            string query = @"
+                select XaPhuong.IDXaPhuong, XaPhuong.TenXaPhuong, XaPhuong.IDQuanHuyen from XaPhuong
+                where XaPhuong.IDQuanHuyen = " + idQuanHuyen;
+            DataTable table = new DataTable();
+
+            SqlDataReader myReader;
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+            myReader.Close();
+
+            return new JsonResult(table);
+        }
+
         [HttpGet("getbyidemp/{idNhanVien}")]
         public JsonResult GetByStatus(int idNhanVien)
         {
