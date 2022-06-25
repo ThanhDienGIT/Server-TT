@@ -389,7 +389,6 @@ namespace ServerAPI.Controllers
             }
             return new JsonResult("Added Successfully");
         }
-
         //delete
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
@@ -413,8 +412,34 @@ namespace ServerAPI.Controllers
                     myCon.Close();
                 }
             }
-
             return new JsonResult("Deleted Successfully");
+        }
+        //Put
+        [HttpPut]
+        public JsonResult Put(PhieuThu pt)
+        {
+            string query = @"
+                UPDATE dbo.PhieuThu SET 
+                      IDNhanVien = '" + pt.IDNhanVien + @"',
+                      NgayThu = '" + DateTime.Now.ToString("yyyy-MM-dd") + @"'
+                WHERE IDPhieu = '" + pt.IDPhieu + @"'
+                ";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+            return new JsonResult("Updated Successfully");
         }
     }
 }
