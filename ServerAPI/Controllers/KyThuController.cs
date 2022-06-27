@@ -268,7 +268,6 @@ namespace ServerAPI.Controllers
                         for (int i = 0; i < table2.Rows.Count; i++)
                         {
                             string getIDPhieuQuery = "select IDENT_CURRENT('PhieuThu') + 1";
-                            int IDPhieu = 0;
                             string maSoPhieu = "PT";
                             DataTable tableID = new DataTable();
                             using (SqlCommand myCommand = new SqlCommand(getIDPhieuQuery, myCon))
@@ -277,11 +276,11 @@ namespace ServerAPI.Controllers
                                 tableID.Load(myReader);
                                 myReader.Close();
                             }
-                            IDPhieu = int.Parse(tableID.Rows[0][0].ToString());
+                            string IDPhieu = tableID.Rows[0][0].ToString();
                             int IDKH = int.Parse(table2.Rows[i][0].ToString());
                             int IDTuyen = int.Parse(table2.Rows[i][1].ToString());
                             int IDMauSoPhieu = int.Parse(table2.Rows[i][2].ToString());
-                            maSoPhieu = String.Concat(maSoPhieu, tableID.Rows[0][0].ToString,
+                            maSoPhieu = String.Concat(maSoPhieu, IDPhieu,
                                 "MKH", IDKH, "D", DateTime.Today.ToString("ddMMyyyy"));
                             string query4 = @"insert into PhieuThu values (" + IDKH + @"," + IDTuyen + @",
 
