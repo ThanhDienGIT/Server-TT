@@ -40,6 +40,63 @@ namespace ServerAPI.Controllers
             return new JsonResult(table);
         }
 
+        [HttpGet("allemp/{idTuyenThu}/{idNhanVien}")]
+        public JsonResult GetAllEmpInTuyenThu(int idTuyenThu, int idNhanVien)
+        {
+            string query = @"
+            select distinct HoTen,IDNhanVien from NhanVien where IDNhanVien in 
+            (
+                select IDNhanVien from PhanTuyen
+                where IDTuyenThu = " + idTuyenThu +@"
+                union 
+                select distinct IDNhanVien from PhieuThu
+                where IDTuyenThu = "+ idTuyenThu +@" and IDNhanVien is Not Null
+            )";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+            string result = "";
+            for(int i = 0; i < table.Rows.Count; i++)
+            {
+                if(i == table.Rows.Count - 1)
+                {
+                    if(idNhanVien == int.Parse(table.Rows[i][1].ToString()))
+                    {
+                        result = string.Concat(result, table.Rows[i][0], " (Hiện tại)");
+                    }
+                    else
+                    {
+                        result = string.Concat(result, table.Rows[i][0]);
+                    }
+                }
+                else
+                {
+                    if (idNhanVien == int.Parse(table.Rows[i][1].ToString()))
+                    {
+                        result = string.Concat(result, table.Rows[i][0], " (Hiện tại)\n");
+                    }
+                    else
+                    {
+                        result = string.Concat(result, table.Rows[i][0], "\n");
+                    }
+                    
+                }
+            }
+            return new JsonResult(result);
+        }
+
         [HttpGet("{nhanVien}/{quanHuyen}/{xaPhuong}")]
         public JsonResult GetByQuanHuyen(int nhanVien, int quanHuyen, int xaPhuong)
         {
@@ -87,6 +144,7 @@ namespace ServerAPI.Controllers
                     myCon.Close();
                 }
             }
+
             return new JsonResult(table);
         }
 
@@ -360,7 +418,7 @@ namespace ServerAPI.Controllers
                     {
                         return new JsonResult(new
                         {
-                            severity = "success",
+                            severity = "warning",
                             message = "Tuyến thu này đã kết thúc. Không thể thực hiện thao tác này"
                         }
                         );
