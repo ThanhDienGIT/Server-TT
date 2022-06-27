@@ -118,15 +118,46 @@ namespace ServerAPI.Controllers
             return new JsonResult(table);
         }
 
+        [HttpGet("CheckTuyenThu/{idNV}")]
+        public JsonResult GetCheckTuyenThu(int idNV)
+        {
+            string checkTuyenThuQuery = "Select NgayKetThuc from NhanVien " +
+                "join dbo.PhanTuyen on NhanVien.IDNhanVien = PhanTuyen.IDNhanVien " +
+                "where NgayKetThuc is null and NhanVien.IDNhanVien = " + idNV;
+            DataTable dataTable = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(checkTuyenThuQuery, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    dataTable.Load(myReader);
+                    myReader.Close();
+                    if (dataTable.Rows.Count > 0)
+                    {
+                        myCon.Close();
+                        return new JsonResult(false);
+                    }
+                    else
+                    {
+                        return new JsonResult(true);
+                    }
+                }
+            }
+        }
+
         [HttpPost]
         public JsonResult Post(NhanVien emp)
         {
+            string formattedNgaySinh = emp.NgaySinh.ToString("yyyy-MM-dd");
             string query = @"
                 INSERT INTO dbo.NhanVien
                 (MaNhanVien, HoTen, Email, GioiTinh, SoDienThoai, NgaySinh, DiaChi, CCCD, TaiKhoan, MatKhau) 
                 VALUES
                 ('" + emp.MaNhanVien + @"', N'" + emp.HoTen + @"', '" + emp.Email + @"', N'" + emp.GioiTinh + @"', '" + emp.SoDienThoai + @"',
-                '" + emp.NgaySinh + @"', N'" + emp.DiaChi + @"', '" + emp.CCCD + @"', '" + emp.TaiKhoan + @"', '" + emp.MatKhau + @"')
+                '" + formattedNgaySinh + @"', N'" + emp.DiaChi + @"', '" + emp.CCCD + @"', '" + emp.TaiKhoan + @"', '" + emp.MatKhau + @"')
                 ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
