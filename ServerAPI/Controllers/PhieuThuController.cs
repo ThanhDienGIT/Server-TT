@@ -331,6 +331,34 @@ namespace ServerAPI.Controllers
 
             return new JsonResult(table);
         }
+
+
+        [HttpGet("khachhang/nhanvien/{idNV}")]
+        public JsonResult GetKhachHangByNhanVien(int idNV)
+        {
+            string query = @"select distinct KhachHang.IDKhachHang,KhachHang.HoTenKH from KhachHang
+                join XaPhuong on KhachHang.IDXaPhuong = XaPhuong.IDXaPhuong
+                where TrangThai = 1 and IDTuyenThu in 
+                    (select IDTuyenThu from PhanTuyen where IDNhanVien = "+ idNV +@")";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
+
         //get KH id
         [HttpGet("khachhang/{id}")]
         public JsonResult GetInfoKHByID(int id)
@@ -360,46 +388,62 @@ namespace ServerAPI.Controllers
         [HttpPost]
         public JsonResult Post(PhieuThu pt)
         {
-            string getMaxIDPhieuQuery = "select IDENT_CURRENT('PhieuThu') + 1";
-            string getIDLoaiKhachHang = "select IDLoaiKhachHang from KhachHang " +
-                "where IDKhachHang = " + pt.IDKhachHang;
-            string maxIDPhieu = "";
-            int IDLoaiKH = 0;
-            DataTable dt = new DataTable();
-            DataTable dtIDLoai = new DataTable();
+            string checkPhieuThu = @"Select * from PhieuThu where IDKhachHang = " + pt.IDKhachHang +
+                @" and IDKyThu = " + pt.IDKyThu;
+            DataTable tableCheckPhieuThu = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
-
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {
                 myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(getMaxIDPhieuQuery, myCon))
+                using (SqlCommand myCommand = new SqlCommand(checkPhieuThu, myCon))
                 {
                     myReader = myCommand.ExecuteReader();
-                    dt.Load(myReader);
+                    tableCheckPhieuThu.Load(myReader);
                     myReader.Close();
                 }
-                using (SqlCommand myCommand = new SqlCommand(getIDLoaiKhachHang, myCon))
+                if(tableCheckPhieuThu.Rows.Count > 0)
                 {
-                    myReader = myCommand.ExecuteReader();
-                    dtIDLoai.Load(myReader);
-                    myReader.Close();
+                    myCon.Close();
+                    return new JsonResult("Phiếu thu tương ứng đã tồn tại. Không thể tạo thêm");
                 }
+                else
+                {
+                    string getMaxIDPhieuQuery = "select IDENT_CURRENT('PhieuThu') + 1";
+                    string getIDLoaiKhachHang = "select IDLoaiKhachHang from KhachHang " +
+                        "where IDKhachHang = " + pt.IDKhachHang;
+                    string maxIDPhieu = "";
+                    int IDLoaiKH = 0;
+                    DataTable dt = new DataTable();
+                    DataTable dtIDLoai = new DataTable();
+                    using (SqlCommand myCommand = new SqlCommand(getMaxIDPhieuQuery, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        dt.Load(myReader);
+                        myReader.Close();
+                    }
+                    using (SqlCommand myCommand = new SqlCommand(getIDLoaiKhachHang, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        dtIDLoai.Load(myReader);
+                        myReader.Close();
+                    }
 
-                maxIDPhieu = dt.Rows[0][0].ToString();
-                IDLoaiKH = int.Parse(dtIDLoai.Rows[0][0].ToString());
-                string maSoPhieu = "PT" + maxIDPhieu + "MKH" + pt.IDKhachHang + "D" + DateTime.Today.ToString("ddMMyyyy");
-                string query = @"insert into PhieuThu values (" + pt.IDKhachHang + @",
+                    maxIDPhieu = dt.Rows[0][0].ToString();
+                    IDLoaiKH = int.Parse(dtIDLoai.Rows[0][0].ToString());
+                    string maSoPhieu = "PT" + maxIDPhieu + "MKH" + pt.IDKhachHang + "D" + DateTime.Today.ToString("ddMMyyyy");
+                    string query = @"insert into PhieuThu values (" + pt.IDKhachHang + @",
                         " + pt.IDTuyenThu + @"," + pt.IDKyThu + @",null,
                         '" + maSoPhieu + @"','" + IDLoaiKH + @"',GETDATE(),null)";
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    myReader.Close();
-                    myCon.Close();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                        myCon.Close();
+                    }
+                    return new JsonResult("Thêm phiếu thu thành công");
                 }
             }
-            return new JsonResult("Added Successfully");
         }
         //delete
         [HttpDelete("{id}")]
@@ -430,28 +474,92 @@ namespace ServerAPI.Controllers
         [HttpPut]
         public JsonResult Put(PhieuThu pt)
         {
-            string query = @"
-                UPDATE dbo.PhieuThu SET 
-                      IDNhanVien = '" + pt.IDNhanVien + @"',
-                      NgayThu = '" + DateTime.Now.ToString("yyyy-MM-dd") + @"'
-                WHERE IDPhieu = '" + pt.IDPhieu + @"'
-                ";
-            DataTable table = new DataTable();
+            string getNgayThangKyThuQuery = @"select Thang, Nam from PhieuThu 
+	            join KyThu on PhieuThu.IDKyThu = KyThu.IDKyThu
+	            where IDPhieu = " + pt.IDPhieu;
+            DataTable tableNgayThangKyThu = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {
                 myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                using (SqlCommand myCommand = new SqlCommand(getNgayThangKyThuQuery, myCon))
                 {
                     myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
+                    tableNgayThangKyThu.Load(myReader);
 
                     myReader.Close();
                     myCon.Close();
                 }
             }
-            return new JsonResult("Updated Successfully");
+            int thangNay = int.Parse(tableNgayThangKyThu.Rows[0][0].ToString());
+            int namNay = int.Parse(tableNgayThangKyThu.Rows[0][1].ToString());
+            int thangTruoc = 0;
+            int namTruoc = 0;
+
+            if (thangNay > 1 && thangNay < 13)
+            {
+                thangTruoc = thangNay - 1;
+                namTruoc = namNay;
+            }
+            if (thangNay == 1)
+            {
+                thangTruoc = 12;
+                namTruoc = namNay - 1;
+            }
+
+            string idKyThuTruoc = "";
+            string getIDKyThuTruocQuery = @"Select * from KyThu where Thang = " + thangTruoc
+                + @" and Nam = " + namTruoc;
+            DataTable tblIDKyThuTruoc = new DataTable();
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(getIDKyThuTruocQuery, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    tblIDKyThuTruoc.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+            if (tblIDKyThuTruoc.Rows.Count > 0)
+            {
+                idKyThuTruoc = tblIDKyThuTruoc.Rows[0][0].ToString();
+                string getPhieuThuTruoc = @"Select NgayThu from PhieuThu where IDKhachHang = " + pt.IDKhachHang
+                    + @" and IDKyThu = " + idKyThuTruoc;
+                DataTable tblPhieuThuTruoc = new DataTable();
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(getPhieuThuTruoc, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        tblPhieuThuTruoc.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+                    }
+                }
+                if (tblPhieuThuTruoc.Rows.Count > 0)
+                {
+                    if (string.IsNullOrEmpty(tblPhieuThuTruoc.Rows[0][0].ToString()))
+                    {
+                        return new JsonResult("Chưa đóng kỳ trước. Không thể đóng kỳ này");
+                    }
+                    else
+                    {
+                        return new JsonResult ("Thu thành công");
+                    }
+                }
+                else
+                {
+                    return new JsonResult ("Không có phiếu thu trước");
+                }
+            }
+            else
+            {
+                return new JsonResult("Không có kỳ thu trước");
+            }
         }
     }
 }
