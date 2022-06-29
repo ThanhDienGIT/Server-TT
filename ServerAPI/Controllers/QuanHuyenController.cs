@@ -42,6 +42,35 @@ namespace ServerAPI.Controllers
             return new JsonResult(table);
         }
 
+        [HttpGet("AvailableDistricts")]
+        public JsonResult GetAvailableDistricts()
+        {
+            string query = @"select distinct TenQuanHuyen, QuanHuyen.IDQuanHuyen from QuanHuyen
+                            join XaPhuong on QuanHuyen.IDQuanHuyen = XaPhuong.IDQuanHuyen
+                            where IDTuyenThu IS NOT NULL";
+            DataTable table = new DataTable();
+
+            SqlDataReader myReader;
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+            myReader.Close();
+
+
+            return new JsonResult(table);
+        }
+
         [HttpGet("{idNhanVien}")]
         public JsonResult GetByStatus(int idNhanVien)
         {
@@ -77,23 +106,54 @@ namespace ServerAPI.Controllers
         {
             string
                 query = @"insert into QuanHuyen values(N'"+qh.TenQuanHuyen+ "');";
+
             DataTable table = new DataTable();
+
+            string checkQuery = @"select * from QuanHuyen where TenQuanHuyen like N'" + qh.TenQuanHuyen + "'";
+
+            DataTable checkDistrict = new DataTable();
+
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {
                 myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                
+                using (SqlCommand myCommand = new SqlCommand(checkQuery, myCon))
                 {
                     myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-
+                    checkDistrict.Load(myReader);
                     myReader.Close();
-                    myCon.Close();
                 }
+
+                if (checkDistrict.Rows.Count == 0)
+                {
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+
+                        myReader.Close();
+                        myCon.Close();
+                    }
+                    return new JsonResult(new
+                    {
+                        severity = "success",
+                        message = "Thêm Quận Huyện Thành Công"
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        severity = "warning",
+                        message = "Tên Quận Huyện Đã Tồn Tại"
+                    });
+                }
+                    
             }
 
-            return new JsonResult("Thêm Quận Huyện Thành Công");
+           
         }
 
         [HttpDelete]
