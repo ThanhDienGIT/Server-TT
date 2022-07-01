@@ -22,19 +22,19 @@ namespace ServerAPI.Controllers
             string query = @"
                 select KhachHang.IDKhachHang, KhachHang.HoTenKH, KhachHang.MaKhachHang, KhachHang.CCCD, KhachHang.NgayCap, KhachHang.NgayTao, 
                     KhachHang.NgayChinhSua,KhachHang.DiaChi, KhachHang.IDXaPhuong, XaPhuong.TenXaPhuong, XaPhuong.IDQuanHuyen, QuanHuyen.TenQuanHuyen,
-                    KhachHang.IDLoaiKhachHang, LoaiKhachHang.TenLoai, KhachHang.TrangThai, PhanTuyen.IDNhanVien
+                    KhachHang.IDLoaiKhachHang, LoaiKhachHang.TenLoai, KhachHang.TrangThai, PhanTuyen.IDNhanVien, XaPhuong.IDTuyenThu
                 from KhachHang
-                inner join XaPhuong
+                JOIN XaPhuong
                 on KhachHang.IDXaPhuong = XaPhuong.IDXaPhuong
-                inner join QuanHuyen
+                JOIN QuanHuyen
                 on XaPhuong.IDQuanHuyen = QuanHuyen.IDQuanHuyen
-                inner join LoaiKhachHang
+                JOIN LoaiKhachHang
 				on KhachHang.IDLoaiKhachHang = LoaiKhachHang.IDLoaiKhachHang
-				inner join TuyenThu 
+				left OUTER JOIN TuyenThu 
 				on XaPhuong.IDTuyenThu = TuyenThu.IDTuyenThu
-				inner join PhanTuyen 
+				left OUTER JOIN PhanTuyen 
 				on PhanTuyen.IDTuyenThu = TuyenThu.IDTuyenThu
-                order by KhachHang.TrangThai desc
+				order by KhachHang.TrangThai desc
             ";
             DataTable table = new DataTable();
             
