@@ -62,14 +62,14 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPost]
-        public JsonResult Post(PhanQuyen pq)
+        public JsonResult Post(PhanQuyen[] pq)
         {
-            string query = @"
-                INSERT INTO dbo.PhanQuyen
-                (IDNhanVien, IDQuyen) 
-                VALUES
-                ('" + pq.IDNhanVien + @"', '" + pq.IDQuyen + @"');
-                ";
+            string query =
+                "INSERT INTO dbo.PhanQuyen(IDNhanVien, IDQuyen) VALUES (" + pq[0].IDNhanVien + ", " + pq[0].IDQuyen + ")";
+            for(int i = 1; i < pq.Length; i++)
+            {
+                query += ",(" + pq[i].IDNhanVien + ", " + pq[i].IDQuyen + ")";
+            }
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
