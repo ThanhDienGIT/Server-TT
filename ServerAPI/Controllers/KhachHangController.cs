@@ -254,6 +254,9 @@ namespace ServerAPI.Controllers
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
 
             DataTable checkCCCD = new DataTable();
+             
+           
+
             string formattedNgayCap = kh.NgayCap.ToString("yyyy-MM-dd");
 
             string query = @"update KhachHang 
