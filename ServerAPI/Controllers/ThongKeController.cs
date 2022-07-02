@@ -186,6 +186,36 @@ namespace ServerAPI.Controllers
 
             return new JsonResult(KyThu);
         }
-       
+
+        [HttpGet("GetCustomer")]
+        public JsonResult GetCustomer()
+        {
+            string query = @"select kh.IDKhachHang , kh.HoTenKH , tt.TenTuyenThu , nv.MaNhanVien ,
+                             nv.HoTen , kh.DiaChi , kh.TrangThai , xp.TenXaPhuong ,qh.TenQuanHuyen
+                             from KhachHang as kh , Nhanvien as nv , XaPhuong as xp , 
+                             QuanHuyen as qh , TuyenThu as tt , PhanTuyen as pt
+                             where kh.IDXaPhuong = xp.IDXaPhuong and qh.IDQuanHuyen = xp.IDQuanHuyen and nv.IDNhanVien = pt.IDNhanVien and 
+                             pt.IDTuyenThu = tt.IDTuyenThu  and pt.IDQuanHuyen = qh.IDQuanHuyen";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            ;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
+
+
     }
 }

@@ -64,11 +64,9 @@ namespace ServerAPI.Controllers
                     }
                     table.Load(myReader);
 
-<<<<<<< HEAD
+
                     myReader.Close(); 
-=======
-                    myReader.Close();
->>>>>>> c5fdbcbdcf20295325ab91c7ba48a869c1d11039
+
                     myCon.Close();
                 }
             }
@@ -123,11 +121,37 @@ namespace ServerAPI.Controllers
             }
             return new JsonResult(table);
 
+        }
 
-
-
+        [HttpGet("getquyen/{ul}")]
+        public JsonResult getquyen(int ul)
+        {
+            string query = "select  c.TenQuyen " +
+                "from NhanVien as a , PhanQuyen as b , Quyen as c " +
+                "where a.IDNhanVien = b.IDNhanVien and b.IDQuyen = c.IDQuyen and a.IDNhanVien = @username";
+            SqlParameter username = new SqlParameter("username", SqlDbType.Int);
+            username.Value = ul;
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.Add(username);
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+            return new JsonResult(table);
 
         }
+
+
+
 
         [HttpPost]
         public JsonResult Post(Login login)
@@ -170,7 +194,59 @@ namespace ServerAPI.Controllers
 
         }
 
+        [HttpPut]
+        public JsonResult Put(NhanVien staff)
+        {
 
+            string query = @"
+                UPDATE dbo.NhanVien SET 
+                MaNhanVien = '" + staff.MaNhanVien + @"',
+                HoTen = N'" + staff.HoTen + @"',
+                Email = '" + staff.Email + @"',
+                GioiTinh = N'" + staff.GioiTinh + @"',
+                SoDienThoai = '" + staff.SoDienThoai + @"',
+                NgaySinh = '" + staff.NgaySinh + @"',
+                DiaChi = N'" + staff.DiaChi + @"',
+                CCCD = '" + staff.CCCD + @"',
+                TaiKhoan = '" + staff.TaiKhoan + @"',
+                MatKhau = '" + staff.MatKhau + @"' 
+                WHERE IDNhanVien = '" + staff.IDNhanVien + @"'
+                ";
+
+            string query1 = @"select * from NhanVien where CCCD = " + staff.CCCD;
+            DataTable table = new DataTable();
+            
+
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            SqlDataReader myReader1;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+
+                using (SqlCommand checkcccdcommand = new SqlCommand(query1, myCon))
+                {
+                    myReader1 = checkcccdcommand.ExecuteReader();
+                    if(myReader1.HasRows)
+                    {
+                        myReader1.Read();
+                        // Chỗ này còn làm tiếp
+                    }
+                }
+
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    
+                }
+
+                myCon.Close();
+            }
+
+            return new JsonResult("Updated Successfully");
+        }
 
 
     }
