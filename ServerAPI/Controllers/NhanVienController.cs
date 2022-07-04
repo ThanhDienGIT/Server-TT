@@ -67,6 +67,7 @@ namespace ServerAPI.Controllers
 
             return new JsonResult(table);
         }
+
         [HttpGet("getlastempid")]
         public JsonResult GetLastEmpID()
         {
@@ -90,6 +91,33 @@ namespace ServerAPI.Controllers
 
             return new JsonResult(table);
         }
+
+        [HttpGet("quyen/{id}")]
+        public JsonResult GetByQuyen(int id)
+        {
+            string query = @"select * from dbo.NhanVien 
+                join dbo.PhanQuyen on NhanVien.IDNhanVien = PhanQuyen.IDNhanVien 
+                where IDQuyen = " + id;
+            DataTable table = new DataTable();
+
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
+
         [HttpPost]
         public JsonResult Post(NhanVien emp)
         {
@@ -132,7 +160,7 @@ namespace ServerAPI.Controllers
                 DiaChi = N'" + emp.DiaChi + @"',
                 CCCD = '" + emp.CCCD + @"',
                 TaiKhoan = '" + emp.TaiKhoan + @"',
-                MatKhau = '" + EasyEncryption.MD5.ComputeMD5Hash(emp.MatKhau) + @"' 
+                MatKhau = '" + emp.MatKhau + @"' 
                 WHERE IDNhanVien = '" + emp.IDNhanVien + @"'
                 ";
             DataTable table = new DataTable();
