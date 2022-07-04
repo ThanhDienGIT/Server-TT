@@ -187,15 +187,121 @@ namespace ServerAPI.Controllers
             return new JsonResult(KyThu);
         }
 
+        [HttpGet("GetKyThu")]
+        public JsonResult GetKyThu()
+        {
+            string query = @"select * from KyThu";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
+
+
+        [HttpGet("GetQuanHuyen")]
+        public JsonResult GetQuanHuyen()
+        {
+            string query = @"select QuanHuyen.IDQuanHuyen, QuanHuyen.TenQuanHuyen from QuanHuyen order by IDQuanHuyen";
+            DataTable table = new DataTable();
+
+            SqlDataReader myReader;
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+            myReader.Close();
+
+
+            return new JsonResult(table);
+        }
+
+        [HttpGet("getXaPhuongTheoQuanHuyen/{ad}")]
+        public JsonResult getXaPhuongTheoQuanHuyen(string ad)
+        {
+            string query = "select a.TenXaPhuong " +
+                "from XaPhuong as a , QuanHuyen as b  " +
+                "where a.IDQuanHuyen = b.IDQuanHuyen and b.TenQuanHuyen = @username ";
+            SqlParameter username = new SqlParameter("username", SqlDbType.NVarChar);
+            username.Value = ad;
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.Add(username);
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
+
+        [HttpGet("GetTuyenThu")]
+        public JsonResult GetTuyenThu()
+        {
+            string query = @" select DISTINCT tt.TenTuyenThu
+                        from PhieuThu as pt , TuyenThu as tt , NhanVien as nv , PhanTuyen as phantuyen
+                        where pt.IDTuyenThu = tt.IDTuyenThu";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
+
+
         [HttpGet("GetCustomer")]
         public JsonResult GetCustomer()
         {
-            string query = @"select kh.IDKhachHang , kh.HoTenKH , tt.TenTuyenThu , nv.MaNhanVien ,
-                             nv.HoTen , kh.DiaChi , kh.TrangThai , xp.TenXaPhuong ,qh.TenQuanHuyen
-                             from KhachHang as kh , Nhanvien as nv , XaPhuong as xp , 
-                             QuanHuyen as qh , TuyenThu as tt , PhanTuyen as pt
-                             where kh.IDXaPhuong = xp.IDXaPhuong and qh.IDQuanHuyen = xp.IDQuanHuyen and nv.IDNhanVien = pt.IDNhanVien and 
-                             pt.IDTuyenThu = tt.IDTuyenThu  and pt.IDQuanHuyen = qh.IDQuanHuyen";
+            string query = @"select DISTINCT 
+                            a.MaKhachHang, a.HoTenKH,a.DiaChi ,a.TrangThai, b.TenXaPhuong ,
+                            c.TenQuanHuyen ,e.TenTuyenThu,q.TenKyThu,q.Thang,q.Nam , d.NgayThu 
+                            from 
+                            KhachHang as a , XaPhuong as b , QuanHuyen as c , 
+                            PhieuThu as d , TuyenThu as e , KyThu as q 
+                            where 
+                            a.IDXaPhuong = b.IDXaPhuong and c.IDQuanHuyen = b.IDQuanHuyen and 
+                            d.IDKhachHang = a.IDKhachHang and d.IDTuyenThu = e.IDTuyenThu and
+                            q.IDKyThu = d.IDKyThu ORDER BY q.TenKyThu,d.NgayThu";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;

@@ -1,5 +1,4 @@
 <<<<<<< HEAD
-
 =======
 D:\Visual project C#\ServerAPI\ServerAPI\bin\Debug\net6.0\appsettings.Development.json
 D:\Visual project C#\ServerAPI\ServerAPI\bin\Debug\net6.0\appsettings.json
@@ -76,7 +75,6 @@ D:\Visual project C#\Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.pdb
 D:\Visual project C#\Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.genruntimeconfig.cache
 D:\Visual project C#\Clone\Server-TT\ServerAPI\obj\Debug\net6.0\ref\ServerAPI.dll
 D:\Visual project C#\Clone\Server-TT\ServerAPI\bin\Debug\net6.0\EasyEncryption.dll
-<<<<<<< HEAD
 D:\Server-TT\Server-TT\ServerAPI\bin\Debug\net6.0\appsettings.Development.json
 D:\Server-TT\Server-TT\ServerAPI\bin\Debug\net6.0\appsettings.json
 D:\Server-TT\Server-TT\ServerAPI\bin\Debug\net6.0\ServerAPI.exe
@@ -115,7 +113,7 @@ D:\Server-TT\Server-TT\ServerAPI\obj\Debug\net6.0\refint\ServerAPI.dll
 D:\Server-TT\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.pdb
 D:\Server-TT\Server-TT\ServerAPI\obj\Debug\net6.0\ServerAPI.genruntimeconfig.cache
 D:\Server-TT\Server-TT\ServerAPI\obj\Debug\net6.0\ref\ServerAPI.dll
-=======
+>>>>>>> Vinh_Branch
 D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\appsettings.Development.json
 D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\appsettings.json
 D:\ThucTap\Server-TT_Clone\Server-TT\ServerAPI\bin\Debug\net6.0\ServerAPI.exe

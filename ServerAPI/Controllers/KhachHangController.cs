@@ -22,19 +22,19 @@ namespace ServerAPI.Controllers
             string query = @"
                 select KhachHang.IDKhachHang, KhachHang.HoTenKH, KhachHang.MaKhachHang, KhachHang.CCCD, KhachHang.NgayCap, KhachHang.NgayTao, 
                     KhachHang.NgayChinhSua,KhachHang.DiaChi, KhachHang.IDXaPhuong, XaPhuong.TenXaPhuong, XaPhuong.IDQuanHuyen, QuanHuyen.TenQuanHuyen,
-                    KhachHang.IDLoaiKhachHang, LoaiKhachHang.TenLoai, KhachHang.TrangThai, PhanTuyen.IDNhanVien
+                    KhachHang.IDLoaiKhachHang, LoaiKhachHang.TenLoai, KhachHang.TrangThai, PhanTuyen.IDNhanVien, XaPhuong.IDTuyenThu
                 from KhachHang
-                inner join XaPhuong
+                JOIN XaPhuong
                 on KhachHang.IDXaPhuong = XaPhuong.IDXaPhuong
-                inner join QuanHuyen
+                JOIN QuanHuyen
                 on XaPhuong.IDQuanHuyen = QuanHuyen.IDQuanHuyen
-                inner join LoaiKhachHang
+                JOIN LoaiKhachHang
 				on KhachHang.IDLoaiKhachHang = LoaiKhachHang.IDLoaiKhachHang
-				inner join TuyenThu 
+				left OUTER JOIN TuyenThu 
 				on XaPhuong.IDTuyenThu = TuyenThu.IDTuyenThu
-				inner join PhanTuyen 
+				left OUTER JOIN PhanTuyen 
 				on PhanTuyen.IDTuyenThu = TuyenThu.IDTuyenThu
-                order by KhachHang.TrangThai desc
+				order by KhachHang.TrangThai desc
             ";
             DataTable table = new DataTable();
             
@@ -152,7 +152,11 @@ namespace ServerAPI.Controllers
                 if (IDTuyenThu.Rows.Count == 0)
                 {
                     myCon.Close();
-                    return new JsonResult("Không Thể Thêm Khách Hàng Do Chưa tồn tại tuyến thu ở địa chỉ hiện tại");                
+                    return new JsonResult(new
+                    {
+                        severity = "warning",
+                        message = "Không Thể Thêm Khách Hàng Do Chưa tồn tại tuyến thu ở địa chỉ hiện tại"
+                    });
                 }
                 else
                 {
@@ -229,18 +233,33 @@ namespace ServerAPI.Controllers
                                 myReader.Close();
                             }
                             myCon.Close();
-                            return new JsonResult("Thêm Khách Hàng Và Phiếu Thu Thành Công");
+                            return new JsonResult(new
+                            {
+                                severity = "success",
+                                message = "Thêm Khách Hàng Và Phiếu Thu Thành Công"
+                            }
+                        );
                         }
                         else
                         {
                             myCon.Close();
-                            return new JsonResult("Thêm Khách Hàng Thành Công");
+                            return new JsonResult(new
+                            {
+                                severity = "success",
+                                message = "Thêm Khách Hàng Thành Công"
+                            }
+                        );
                         }                   
                     }
                     else
                     {
                         myCon.Close();
-                        return new JsonResult("Căn Cước Công Dân Đã Tồn Tại");
+                        return new JsonResult(new
+                        {
+                            severity = "warning",
+                            message = "Căn Cước Công Dân Đã Tồn Tại"
+                        }
+                        );
                     }                
                 }              
             }
@@ -261,7 +280,6 @@ namespace ServerAPI.Controllers
 
             string query = @"update KhachHang 
                             set IDXaPhuong = '" + kh.IDXaPhuong + "', HoTenKH = N'" + kh.HoTenKH + "', DiaChi = N'" + kh.DiaChi + "', CCCD = '" + kh.CCCD + "', NgayCap = '" + formattedNgayCap + "', NgayChinhSua = " + "GETDATE()" + ", IDLoaiKhachHang = '" + kh.IDLoaiKhachHang  + "' where IDKhachHang =" + kh.IDKhachHang ;
-            Console.WriteLine(query);
             DataTable table = new DataTable();
 
             SqlDataReader myReader;
@@ -280,7 +298,12 @@ namespace ServerAPI.Controllers
                 if (checkCCCD.Rows.Count > 0)
                 {
                     myCon.Close();
-                    return new JsonResult("CCCD đã tồn tại");
+                    return new JsonResult(new
+                    {
+                        severity = "warning",
+                        message = "CCCD đã tồn tại"
+                    }
+                        );
                 }
                 else
                 {
@@ -291,18 +314,24 @@ namespace ServerAPI.Controllers
 
                         myReader.Close();
                         myCon.Close();
-                        return new JsonResult("Chỉnh Sửa Thành Công");
+
+                        return new JsonResult(new
+                        {
+                            severity = "success",
+                            message = "Chỉnh Sửa Khách Hàng Thành Công"
+                        }
+                        );
                     }
                 }
             }
         }
 
-        [HttpPut("{id}")]
-        public JsonResult PutStatus(int id)
+        [HttpPut("{id},{status}")]
+        public JsonResult PutStatus(int id, int status)
         {
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
 
-            string query = @"update KhachHang set TrangThai = 0 where IDKhachHang =" + id;
+            string query = @"update KhachHang set TrangThai = "+ status + " where IDKhachHang =" + id;
 
             DataTable table = new DataTable();
 
@@ -320,8 +349,27 @@ namespace ServerAPI.Controllers
                         myReader.Close();
 
                         myCon.Close();
-                        return new JsonResult("Xoá Thành Công Khách Hàng");
+
+                        if(status == 0)
+                        {
+                            return new JsonResult(new
+                            {
+                                severity = "success",
+                                message = "Xoá Khách Hàng Thành Công"
+                            }
+                            );
+                        }
+                        else
+                        {
+                            return new JsonResult(new
+                            {
+                            severity = "success",
+                            message = "Phục Hồi Khách Hàng Thành Công"
+                            }
+                            );
                     }
+                        
+                }
                 }
             }
     }
