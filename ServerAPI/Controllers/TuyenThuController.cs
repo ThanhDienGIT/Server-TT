@@ -424,7 +424,7 @@ namespace ServerAPI.Controllers
                         );
                     }
                     else
-                    {
+                    {                        
                         string queryGetXaPhuong = "select IDXaPhuong from XaPhuong where IDTuyenThu = " + id;
                         DataTable tableXaPhuong = new DataTable();
                         using (SqlCommand getXaPhuongCMD = new SqlCommand(queryGetXaPhuong, myCon))
@@ -473,19 +473,40 @@ namespace ServerAPI.Controllers
                         }
                         else
                         {
-                            string query = @"Delete from dbo.TuyenThu where IDTuyenThu = " + id;
-                            using (SqlCommand delTuyenThuCommand = new SqlCommand(query, myCon))
+                            string queryCheckPhieuThu = "Select * from PhieuThu where IDTuyenThu = " + id;
+                            DataTable tableCheckPhieuThu = new DataTable();
+                            using (SqlCommand checkPhieuThuCommand = new SqlCommand(queryCheckPhieuThu, myCon))
                             {
-                                myReader = delTuyenThuCommand.ExecuteReader();
+                                myReader = checkPhieuThuCommand.ExecuteReader();
+                                tableCheckPhieuThu.Load(myReader);
                                 myReader.Close();
                                 myCon.Close();
                             }
-                            return new JsonResult(new
+                            if(tableCheckPhieuThu.Rows.Count > 0)
                             {
-                                severity = "success",
-                                message = "Tuyến thu đã được kết thúc thành công"
+                                return new JsonResult(new
+                                {
+                                    severity = "warning",
+                                    message = "Không thể xoá tuyến thu vì tồn tại phiếu thu. Hãy xoá phiếu thu trước"
+                                }
+                                );
                             }
-                            );
+                            else
+                            {
+                                string query = @"Delete from dbo.TuyenThu where IDTuyenThu = " + id;
+                                using (SqlCommand delTuyenThuCommand = new SqlCommand(query, myCon))
+                                {
+                                    myReader = delTuyenThuCommand.ExecuteReader();
+                                    myReader.Close();
+                                    myCon.Close();
+                                }
+                                return new JsonResult(new
+                                {
+                                    severity = "success",
+                                    message = "Tuyến thu đã được kết thúc thành công"
+                                }
+                                );
+                            }
                         }
                     }
                 }
