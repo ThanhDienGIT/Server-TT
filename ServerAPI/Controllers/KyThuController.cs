@@ -172,7 +172,7 @@ namespace ServerAPI.Controllers
             DataTable dt = new DataTable();
 
             string query = @"insert into dbo.KyThu values
-                (N'Kỳ thu tháng " + kt.Thang + @" năm " + kt.Nam + @"','" + kt.Thang + @"','" + kt.Nam + @"')";
+                (N'Kỳ thu tháng " + kt.Thang + @" năm " + kt.Nam + @"','" + kt.Thang + @"','" + kt.Nam + @"', SYSDATETIME())";
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
 
