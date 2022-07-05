@@ -57,6 +57,50 @@ namespace ServerAPI.Controllers
 
             return new JsonResult(table);
         }
+
+        [HttpGet("getCustomerNoRoute")]
+        public JsonResult GetCustomerNoRoute()
+        {
+            string query = @"
+                select KhachHang.IDKhachHang, KhachHang.HoTenKH, KhachHang.MaKhachHang, KhachHang.CCCD, KhachHang.NgayCap, KhachHang.NgayTao, 
+                    KhachHang.NgayChinhSua,KhachHang.DiaChi, KhachHang.IDXaPhuong, XaPhuong.TenXaPhuong, XaPhuong.IDQuanHuyen, QuanHuyen.TenQuanHuyen,
+                    KhachHang.IDLoaiKhachHang, LoaiKhachHang.TenLoai, KhachHang.TrangThai, PhanTuyen.IDNhanVien, XaPhuong.IDTuyenThu
+                from KhachHang
+                JOIN XaPhuong
+                on KhachHang.IDXaPhuong = XaPhuong.IDXaPhuong
+                JOIN QuanHuyen
+                on XaPhuong.IDQuanHuyen = QuanHuyen.IDQuanHuyen
+                JOIN LoaiKhachHang
+				on KhachHang.IDLoaiKhachHang = LoaiKhachHang.IDLoaiKhachHang
+				left OUTER JOIN TuyenThu 
+				on XaPhuong.IDTuyenThu = TuyenThu.IDTuyenThu
+				left OUTER JOIN PhanTuyen 
+				on PhanTuyen.IDTuyenThu = TuyenThu.IDTuyenThu
+				where XaPhuong.IDTuyenThu is null and KhachHang.TrangThai = 1
+				order by QuanHuyen.IDQuanHuyen asc
+            ";
+            DataTable table = new DataTable();
+
+            SqlDataReader myReader;
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+            myReader.Close();
+
+            return new JsonResult(table);
+        }
+
         //lay thong tin khach hang tu idNhanVien
         [HttpGet("{idNhanVien}")]
         public JsonResult GetByStatus(int idNhanVien)
@@ -319,6 +363,70 @@ namespace ServerAPI.Controllers
                         {
                             severity = "success",
                             message = "Chỉnh Sửa Khách Hàng Thành Công"
+                        }
+                        );
+                    }
+                }
+            }
+        }
+
+        [HttpPut("customerNoRoute")]
+        public JsonResult PutCustomerNoRoute()
+        {
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+
+            DataTable checkData = new DataTable();
+
+            string checkQuery = @"select IDKhachHang from KhachHang join XaPhuong on KhachHang.IDXaPhuong = XaPhuong.IDXaPhuong where IDTuyenThu is null and KhachHang.TrangThai = 1";
+
+            string query = @"
+                update KhachHang 
+				set TrangThai = 0 
+				where IDKhachHang in(
+					select IDKhachHang from KhachHang
+					join XaPhuong on KhachHang.IDXaPhuong = XaPhuong.IDXaPhuong
+					where IDTuyenThu is null and KhachHang.TrangThai = 1)
+            ";
+            DataTable table = new DataTable();
+
+            SqlDataReader myReader;
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+
+                using (SqlCommand myCommand = new SqlCommand(checkQuery, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    checkData.Load(myReader);
+                    myReader.Close();
+                }
+
+                if (checkData.Rows.Count == 0)
+                {
+                    myCon.Close();
+                    return new JsonResult(new
+                    {
+                        severity = "warning",
+                        message = "Không Tồn Tại Khách Hàng Không Có Tuyên Thu"
+                    }
+                        );
+                }
+                else
+                {
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        Console.WriteLine(query);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+
+                        myReader.Close();
+                        myCon.Close();
+
+                        return new JsonResult(new
+                        {
+                            severity = "success",
+                            message = "Cập Nhật Trạng Thái Khách Hàng Thành Công"
                         }
                         );
                     }
