@@ -252,7 +252,12 @@ namespace ServerAPI.Controllers
                         {
                             if (string.IsNullOrEmpty(table2.Rows[i][1].ToString()))
                             {
-                                return new JsonResult("Tồn tại khách hàng chưa có tuyến thu.");
+                                return new JsonResult(new
+                                {
+                                    severity = "warning",
+                                    message = "Tồn tại khách hàng chưa có tuyến thu."
+                                }
+                                );
                             }
                         }
                         using (SqlCommand myCommand = new SqlCommand(query, myCon))
@@ -302,7 +307,6 @@ namespace ServerAPI.Controllers
                         using (SqlCommand myCommand = new SqlCommand(query, myCon))
                         {
                             myReader = myCommand.ExecuteReader();
-
                             myReader.Close();
                             myCon.Close();
                         }
