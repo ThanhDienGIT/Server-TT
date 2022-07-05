@@ -94,7 +94,7 @@ namespace ServerAPI.Controllers
 
             if (nam == -1 && thang == -1)
             {
-                string query = @"select IDKyThu, TenKyThu, Thang, Nam, convert(varchar, NgayTao, 103) from dbo.KyThu ORDER BY nam ASC, thang ASC";
+                string query = @"select IDKyThu, TenKyThu, Thang, Nam, convert(varchar, NgayTao, 103) as NgayTao from dbo.KyThu ORDER BY nam ASC, thang ASC";
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
                     myCon.Open();
