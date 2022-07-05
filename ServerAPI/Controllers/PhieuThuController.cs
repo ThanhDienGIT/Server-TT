@@ -21,8 +21,8 @@ namespace ServerAPI.Controllers
         public JsonResult Get()
         {
             string query = @"
-               select PhieuThu.IDPhieu,KhachHang.IDKhachHang,KhachHang.HoTenKH,TuyenThu.IDTuyenThu,TuyenThu.TenTuyenThu,KyThu.IDKyThu,KyThu.TenKyThu,
-					KyThu.Thang,KyThu.Nam,NhanVien.IDNhanVien,NhanVien.HoTen,PhieuThu.MauSoPhieu,PhieuThu.NgayTao,PhieuThu.NgayThu,XaPhuong.IDXaPhuong,XaPhuong.TenXaPhuong,QuanHuyen.IDQuanHuyen,QuanHuyen.TenQuanHuyen,LoaiKhachHang.IDLoaiKhachHang,LoaiKhachHang.TenLoai,LoaiKhachHang.Gia
+               select PhieuThu.MaSoPhieu,PhieuThu.IDPhieu,KhachHang.MaKhachHang,KhachHang.IDKhachHang,KhachHang.HoTenKH,TuyenThu.MaTuyenThu,TuyenThu.IDTuyenThu,TuyenThu.TenTuyenThu,KyThu.IDKyThu,KyThu.TenKyThu,
+					KyThu.Thang,KyThu.Nam,NhanVien.MaNhanVien,NhanVien.IDNhanVien,NhanVien.HoTen,PhieuThu.MauSoPhieu,PhieuThu.NgayTao,PhieuThu.NgayThu,XaPhuong.IDXaPhuong,XaPhuong.TenXaPhuong,QuanHuyen.IDQuanHuyen,QuanHuyen.TenQuanHuyen,LoaiKhachHang.IDLoaiKhachHang,LoaiKhachHang.TenLoai,LoaiKhachHang.Gia
                 from PhieuThu
                 inner join KhachHang
                 on PhieuThu.IDKhachHang = KhachHang.IDKhachHang
@@ -64,8 +64,8 @@ namespace ServerAPI.Controllers
         public JsonResult GetPhieuNV(int idNV)
         {
             string query = @"
-               select PhieuThu.IDPhieu,KhachHang.IDKhachHang,KhachHang.HoTenKH,TuyenThu.IDTuyenThu,TuyenThu.TenTuyenThu,KyThu.IDKyThu,KyThu.TenKyThu,
-					KyThu.Thang,KyThu.Nam,NhanVien.IDNhanVien,NhanVien.HoTen,PhieuThu.MauSoPhieu,PhieuThu.NgayTao,PhieuThu.NgayThu,XaPhuong.IDXaPhuong,XaPhuong.TenXaPhuong,QuanHuyen.IDQuanHuyen,QuanHuyen.TenQuanHuyen,LoaiKhachHang.IDLoaiKhachHang,LoaiKhachHang.TenLoai,LoaiKhachHang.Gia
+               select PhieuThu.MaSoPhieu,PhieuThu.IDPhieu,KhachHang.MaKhachHang,KhachHang.IDKhachHang,KhachHang.HoTenKH,TuyenThu.MaTuyenThu,TuyenThu.IDTuyenThu,TuyenThu.TenTuyenThu,KyThu.IDKyThu,KyThu.TenKyThu,
+					KyThu.Thang,KyThu.Nam,NhanVien.MaNhanVien,NhanVien.IDNhanVien,NhanVien.HoTen,PhieuThu.MauSoPhieu,PhieuThu.NgayTao,PhieuThu.NgayThu,XaPhuong.IDXaPhuong,XaPhuong.TenXaPhuong,QuanHuyen.IDQuanHuyen,QuanHuyen.TenQuanHuyen,LoaiKhachHang.IDLoaiKhachHang,LoaiKhachHang.TenLoai,LoaiKhachHang.Gia
                 from PhieuThu
                 inner join KhachHang
                 on PhieuThu.IDKhachHang = KhachHang.IDKhachHang
@@ -207,6 +207,32 @@ namespace ServerAPI.Controllers
         public JsonResult GetTuyenThu()
         {
             string query = @"select * from TuyenThu;";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
+
+        //get TuyenThu
+        [HttpGet("tuyenthu/{idNV}")]
+        public JsonResult GetTuyenThuBYID(int idNV)
+        {
+            string query = @"select  TuyenThu.TenTuyenThu from TuyenThu 
+                             inner join PhanTuyen on TuyenThu.IDTuyenThu = PhanTuyen.IDTuyenThu
+                                where PhanTuyen.IDNhanVien = "+ idNV +" ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
@@ -478,6 +504,13 @@ namespace ServerAPI.Controllers
 	            join KyThu on PhieuThu.IDKyThu = KyThu.IDKyThu
 	            where IDPhieu = " + pt.IDPhieu;
             DataTable tableNgayThangKyThu = new DataTable();
+            string query = @"
+                UPDATE dbo.PhieuThu SET 
+                      IDNhanVien = '" + pt.IDNhanVien + @"',
+                      NgayThu = '" + DateTime.Now.ToString("yyyy-MM-dd") + @"'
+                WHERE IDPhieu = '" + pt.IDPhieu + @"'
+                ";
+            DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -509,7 +542,7 @@ namespace ServerAPI.Controllers
             }
 
             string idKyThuTruoc = "";
-            string getIDKyThuTruocQuery = @"Select * from KyThu where Thang = " + thangTruoc
+            string getIDKyThuTruocQuery = @"Select KyThu.IDKyThu from KyThu where Thang = " + thangTruoc
                 + @" and Nam = " + namTruoc;
             DataTable tblIDKyThuTruoc = new DataTable();
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -525,6 +558,7 @@ namespace ServerAPI.Controllers
             }
             if (tblIDKyThuTruoc.Rows.Count > 0)
             {
+                Console.WriteLine(tblIDKyThuTruoc.Rows[0][0].ToString());
                 idKyThuTruoc = tblIDKyThuTruoc.Rows[0][0].ToString();
                 string getPhieuThuTruoc = @"Select NgayThu from PhieuThu where IDKhachHang = " + pt.IDKhachHang
                     + @" and IDKyThu = " + idKyThuTruoc;
@@ -548,17 +582,52 @@ namespace ServerAPI.Controllers
                     }
                     else
                     {
-                        return new JsonResult ("Thu thành công");
+                        using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                        {
+                            myCon.Open();
+                            using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                            {
+                                myReader = myCommand.ExecuteReader();
+                                table.Load(myReader);
+                                myReader.Close();
+                                myCon.Close();
+                            }
+                        }
+                        return new JsonResult("Updated Successfully");
                     }
                 }
                 else
                 {
-                    return new JsonResult ("Không có phiếu thu trước");
+                    using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                    {
+                        myCon.Open();
+                        using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            table.Load(myReader);
+                            myReader.Close();
+                            myCon.Close();
+                        }
+                    }
+                    return new JsonResult("Updated Successfully");
+                    //return new JsonResult ("Không có phiếu thu trước");
                 }
             }
             else
             {
-                return new JsonResult("Không có kỳ thu trước");
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+                    }
+                }
+                return new JsonResult("Updated Successfully");
+                //return new JsonResult("Không có kỳ thu trước");
             }
         }
     }

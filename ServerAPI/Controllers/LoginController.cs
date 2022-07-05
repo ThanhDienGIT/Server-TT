@@ -97,6 +97,7 @@ namespace ServerAPI.Controllers
             return new JsonResult(table);
         }
 
+        
 
         [HttpGet("getmastership/{ul}")]
         public JsonResult getmastership(int ul)

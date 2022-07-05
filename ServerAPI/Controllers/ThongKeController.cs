@@ -208,7 +208,28 @@ namespace ServerAPI.Controllers
 
             return new JsonResult(table);
         }
+        [HttpGet("getminday")]
+        public JsonResult getminday()
+        {
+            string query = @"select min(NgayThu) as ngaynhonhat from PhieuThu";
 
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+            return new JsonResult(table);
+
+        }
 
         [HttpGet("GetQuanHuyen")]
         public JsonResult GetQuanHuyen()
@@ -294,7 +315,7 @@ namespace ServerAPI.Controllers
         {
             string query = @"select DISTINCT 
                             a.MaKhachHang, a.HoTenKH,a.DiaChi ,a.TrangThai, b.TenXaPhuong ,
-                            c.TenQuanHuyen ,e.TenTuyenThu,q.TenKyThu,q.Thang,q.Nam , d.NgayThu 
+                            c.TenQuanHuyen ,e.TenTuyenThu,q.TenKyThu,q.Thang,q.Nam , d.NgayThu ,d.NgayTao
                             from 
                             KhachHang as a , XaPhuong as b , QuanHuyen as c , 
                             PhieuThu as d , TuyenThu as e , KyThu as q 
