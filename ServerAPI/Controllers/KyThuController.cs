@@ -238,24 +238,9 @@ namespace ServerAPI.Controllers
                     return new JsonResult("Đã tồn tại kỳ thu tháng " + kt.Thang + " năm " + kt.Nam);
                 }
                 else
-                {
-                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                    {
-                        myReader = myCommand.ExecuteReader();
-
-                        myReader.Close();
-                        myCon.Close();
-                    }
+                {                    
                     if (status)
                     {
-                        myCon.Open();
-                        using (SqlCommand myCommand = new SqlCommand(query2, myCon))
-                        {
-                            myReader = myCommand.ExecuteReader();
-                            table.Load(myReader);
-
-                            myReader.Close();
-                        }
                         using (SqlCommand myCommand = new SqlCommand(query3, myCon))
                         {
                             myReader = myCommand.ExecuteReader();
@@ -263,7 +248,29 @@ namespace ServerAPI.Controllers
 
                             myReader.Close();
                         }
-
+                        for (int i = 0; i < table2.Rows.Count; i++)
+                        {
+                            if (string.IsNullOrEmpty(table2.Rows[i][1].ToString()))
+                            {
+                                return new JsonResult(new
+                                {
+                                    severity = "warning",
+                                    message = "Tồn tại khách hàng chưa có tuyến thu."
+                                }
+                                );
+                            }
+                        }
+                        using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            myReader.Close();
+                        }
+                        using (SqlCommand myCommand = new SqlCommand(query2, myCon))
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            table.Load(myReader);
+                            myReader.Close();
+                        }
                         int IDKyThu = int.Parse(table.Rows[0][0].ToString());
                         for (int i = 0; i < table2.Rows.Count; i++)
                         {
@@ -279,6 +286,7 @@ namespace ServerAPI.Controllers
                             string IDPhieu = tableID.Rows[0][0].ToString();
                             int IDKH = int.Parse(table2.Rows[i][0].ToString());
                             int IDTuyen = int.Parse(table2.Rows[i][1].ToString());
+                            
                             int IDMauSoPhieu = int.Parse(table2.Rows[i][2].ToString());
                             maSoPhieu = String.Concat(maSoPhieu, IDPhieu,
                                 "MKH", IDKH, "D", DateTime.Today.ToString("ddMMyyyy"));
@@ -293,6 +301,15 @@ namespace ServerAPI.Controllers
                             }
                         }
                         myCon.Close();
+                    }
+                    else
+                    {
+                        using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            myReader.Close();
+                            myCon.Close();
+                        }
                     }
                     return new JsonResult(new
                     {
