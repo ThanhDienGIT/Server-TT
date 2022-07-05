@@ -480,10 +480,11 @@ namespace ServerAPI.Controllers
                                 myReader = checkPhieuThuCommand.ExecuteReader();
                                 tableCheckPhieuThu.Load(myReader);
                                 myReader.Close();
-                                myCon.Close();
+                                
                             }
                             if(tableCheckPhieuThu.Rows.Count > 0)
                             {
+                                myCon.Close();
                                 return new JsonResult(new
                                 {
                                     severity = "warning",
