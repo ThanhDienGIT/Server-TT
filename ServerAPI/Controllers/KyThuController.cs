@@ -94,7 +94,7 @@ namespace ServerAPI.Controllers
 
             if (nam == -1 && thang == -1)
             {
-                string query = @"select * from dbo.KyThu ORDER BY nam ASC, thang ASC";
+                string query = @"select IDKyThu, TenKyThu, Thang, Nam, convert(varchar, NgayTao, 103) as NgayTao from dbo.KyThu ORDER BY nam ASC, thang ASC";
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
                     myCon.Open();
@@ -172,7 +172,7 @@ namespace ServerAPI.Controllers
             DataTable dt = new DataTable();
 
             string query = @"insert into dbo.KyThu values
-                (N'Kỳ thu tháng " + kt.Thang + @" năm " + kt.Nam + @"','" + kt.Thang + @"','" + kt.Nam + @"')";
+                (N'Kỳ thu tháng " + kt.Thang + @" năm " + kt.Nam + @"','" + kt.Thang + @"','" + kt.Nam + @"', SYSDATETIME())";
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
 
@@ -212,7 +212,7 @@ namespace ServerAPI.Controllers
             string queryCheck = "Select * from dbo.KyThu where Thang = " + kt.Thang + @" and Nam =" + kt.Nam;
             DataTable dt = new DataTable();
             string query = @"insert into dbo.KyThu values
-                (N'Kỳ thu tháng " + kt.Thang + @" năm " + kt.Nam + @"','" + kt.Thang + @"','" + kt.Nam + @"')";
+                (N'Kỳ thu tháng " + kt.Thang + @" năm " + kt.Nam + @"','" + kt.Thang + @"','" + kt.Nam + @"', SYSDATETIME())";
             string query2 = @"Select IDKyThu from dbo.KyThu where 
                 Thang = " + kt.Thang + @" and Nam = " + kt.Nam;
             string query3 = @"Select IDKhachHang, IDTuyenThu, IDLoaiKhachHang from dbo.KhachHang join dbo.XaPhuong on 
