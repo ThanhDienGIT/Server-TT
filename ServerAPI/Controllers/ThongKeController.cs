@@ -234,7 +234,7 @@ namespace ServerAPI.Controllers
         [HttpGet("GetQuanHuyen")]
         public JsonResult GetQuanHuyen()
         {
-            string query = @"select QuanHuyen.IDQuanHuyen, QuanHuyen.TenQuanHuyen from QuanHuyen order by IDQuanHuyen";
+            string query = @"select QuanHuyen.IDQuanHuyen, QuanHuyen.TenQuanHuyen from QuanHuyen order by IDQuanHuyen ";
             DataTable table = new DataTable();
 
             SqlDataReader myReader;
@@ -322,7 +322,7 @@ namespace ServerAPI.Controllers
                             where 
                             a.IDXaPhuong = b.IDXaPhuong and c.IDQuanHuyen = b.IDQuanHuyen and 
                             d.IDKhachHang = a.IDKhachHang and d.IDTuyenThu = e.IDTuyenThu and
-                            q.IDKyThu = d.IDKyThu ORDER BY q.TenKyThu,d.NgayThu";
+                            q.IDKyThu = d.IDKyThu ORDER BY q.TenKyThu,d.NgayThu DESC";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
