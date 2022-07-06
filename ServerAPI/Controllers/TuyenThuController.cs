@@ -122,7 +122,7 @@ namespace ServerAPI.Controllers
             {
                 whereString = String.Concat(whereString, " AND NhanVien.IDNhanVien = ", nhanVien, " ");
             }
-            if (quanHuyen != -1)
+            if (quanHuyen != -1)    
             {
                 whereString = String.Concat(whereString, " AND QuanHuyen.IDQuanHuyen = ", quanHuyen, " ");
             }
