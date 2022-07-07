@@ -377,6 +377,278 @@ namespace ServerAPI.Controllers
 
             return new JsonResult(table);
         }
+        [HttpGet("GetTurnover")]
+        public JsonResult GetTurnover()
+        {
+            string query = @"select c.MaTuyenThu, C.TenTuyenThu ,b.MaNhanVien,b.HoTen ,w.IDLoaiKhachHang ,q.TenQuanHuyen , e.TenXaPhuong, a.NgayTao,a.NgayThu
+                            from PhieuThu as a , NhanVien as b,TuyenThu as c ,XaPhuong as e, QuanHuyen as q,KhachHang as w
+                            where a.IDNhanVien = b.IDNhanVien and a.IDTuyenThu = c.IDTuyenThu and a.IDKhachHang = w.IDKhachHang 
+                            and w.IDXaPhuong = e.IDXaPhuong and e.IDQuanHuyen = q.IDQuanHuyen";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            Console.WriteLine(query);
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
+
+        [HttpGet("GetTurnoverChart")]
+        public JsonResult GetTurnoverChart()
+        {
+            string query = @"select c.MaTuyenThu, C.TenTuyenThu ,b.MaNhanVien,b.HoTen ,w.IDLoaiKhachHang ,q.TenQuanHuyen , e.TenXaPhuong, a.NgayTao,a.NgayThu,d.Thang,d.Nam
+                            from PhieuThu as a , NhanVien as b,TuyenThu as c ,XaPhuong as e, QuanHuyen as q,KhachHang as w, KyThu as d
+                            where a.IDNhanVien = b.IDNhanVien and a.IDTuyenThu = c.IDTuyenThu and a.IDKhachHang = w.IDKhachHang 
+                            and w.IDXaPhuong = e.IDXaPhuong and e.IDQuanHuyen = q.IDQuanHuyen and a.IDKyThu = d.IDKyThu";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            Console.WriteLine(query);
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
+
+
+
+        [HttpGet("getngaytheothangcua1kythu/{nam}/{thang}")]
+        public JsonResult getChartdataKyThu(int nam,int thang)
+        {
+            string query1 = @"select c.MaTuyenThu, C.TenTuyenThu ,b.MaNhanVien,b.HoTen ,w.IDLoaiKhachHang ,q.TenQuanHuyen , e.TenXaPhuong, a.NgayTao,a.NgayThu,d.Thang,d.Nam
+                            from PhieuThu as a , NhanVien as b,TuyenThu as c ,XaPhuong as e, QuanHuyen as q,KhachHang as w, KyThu as d
+                            where a.IDNhanVien = b.IDNhanVien and a.IDTuyenThu = c.IDTuyenThu and a.IDKhachHang = w.IDKhachHang 
+                            and w.IDXaPhuong = e.IDXaPhuong and e.IDQuanHuyen = q.IDQuanHuyen and a.IDKyThu = d.IDKyThu";
+            string whereString = @"";
+
+
+            if (nam != -1)
+            {
+                whereString = string.Concat(whereString, " and d.Nam  = " + "'" + nam + "'");
+            }
+            if (thang != -1)
+            {
+                whereString = string.Concat(whereString, " and d.Thang =  "+ "'" + thang + "'");
+            }
+           
+
+            string query = string.Concat(query1, whereString);
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            Console.WriteLine(query);
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [HttpGet("getTurnover/{ngaybatdau}/{ngayketthuc}/{tenquanhuyen}/{tenxaphuong}/{tennhanvien}")]
+        public JsonResult GetCustomerifsall(string ngaybatdau, string ngayketthuc,
+         string tenquanhuyen, string tenxaphuong, string tennhanvien)
+        {
+            string selectform = @"select c.MaTuyenThu, C.TenTuyenThu ,b.MaNhanVien,b.HoTen ,w.IDLoaiKhachHang ,q.TenQuanHuyen , e.TenXaPhuong, a.NgayTao,a.NgayThu
+                            from PhieuThu as a , NhanVien as b,TuyenThu as c ,XaPhuong as e, QuanHuyen as q,KhachHang as w
+                            where a.IDNhanVien = b.IDNhanVien and a.IDTuyenThu = c.IDTuyenThu and a.IDKhachHang = w.IDKhachHang 
+                            and w.IDXaPhuong = e.IDXaPhuong and e.IDQuanHuyen = q.IDQuanHuyen";
+            string whereString = @"";
+            
+
+            whereString = string.Concat(whereString, " and a.NgayTao between " + "'" + ngaybatdau + "'" + " and " + "'" + ngayketthuc + "'");
+
+            if (tenquanhuyen != "noquanhuyen")
+            {
+                whereString = string.Concat(whereString, " and q.TenQuanHuyen = " + "N'", tenquanhuyen, "' ");
+            }
+            if (tenxaphuong != "noxaphuong")
+            {
+                whereString = string.Concat(whereString, " and e.TenXaPhuong = " + "N'", tenxaphuong, "' ");
+            }
+            if (tennhanvien != "nonhanvien")
+            {
+                whereString = string.Concat(whereString, " and b.HoTen = " + "N'", tennhanvien, "' ");
+            }
+
+            string query = string.Concat(selectform, whereString);
+            Console.WriteLine(query);
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
+
+
+        [HttpGet("GetNVTHU")]
+        public JsonResult GetNVTHU()
+        {
+            string query = @"select a.HoTen , a.MaNhanVien
+                            from NhanVien as a , Quyen as b , PhanQuyen as c
+                            where a.IDNhanVien = c.IDNhanVien and b.IDQuyen = c.IDQuyen and b.TenQuyen = N'Thu Tiền'";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+            Console.WriteLine(query);
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
+
+        [HttpGet("Getstaffqh/{tenquanquyen}")]
+        public JsonResult Getstaffqh(string tenquanquyen)
+        {
+            string selectform = @"select distinct b.HoTen, b.MaNhanVien
+                                from PhieuThu as a , NhanVien as b,TuyenThu as c ,XaPhuong as e, QuanHuyen as q,KhachHang as w
+                                where a.IDNhanVien = b.IDNhanVien and a.IDTuyenThu = c.IDTuyenThu and a.IDKhachHang = w.IDKhachHang and
+                                w.IDXaPhuong = e.IDXaPhuong and e.IDQuanHuyen = q.IDQuanHuyen";
+            string whereString = @"";
+
+
+
+            if (tenquanquyen != "noquanhuyen")
+            {
+                whereString = string.Concat(whereString, " and q.TenQuanHuyen = " + "N'", tenquanquyen, "' ");
+            }
+            
+
+
+            string query = string.Concat(selectform, whereString);
+            Console.WriteLine(query);
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
+
+
+        [HttpGet("Getstaffqhxp/{tenquanquyen}/{tenxaphuong}")]
+        public JsonResult Getstaffqhxp(string tenquanquyen, string tenxaphuong)
+        {
+            string selectform = @"select distinct b.HoTen, b.MaNhanVien
+                                from PhieuThu as a , NhanVien as b,TuyenThu as c ,XaPhuong as e, QuanHuyen as q,KhachHang as w
+                                where a.IDNhanVien = b.IDNhanVien and a.IDTuyenThu = c.IDTuyenThu and a.IDKhachHang = w.IDKhachHang and
+                                w.IDXaPhuong = e.IDXaPhuong and e.IDQuanHuyen = q.IDQuanHuyen";
+            string whereString = @"";
+            
+
+
+            if (tenquanquyen != "noquanhuyen")
+            {
+                whereString = string.Concat(whereString, " and q.TenQuanHuyen = " + "N'", tenquanquyen, "' ");
+            }
+            if (tenxaphuong != "noxaphuong")
+            {
+                whereString = string.Concat(whereString, " and e.TenXaPhuong = " + "N'", tenxaphuong, "' ");
+            }
+            
+
+            string query = string.Concat(selectform, whereString);
+            Console.WriteLine(query);
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("DBCon");
+            SqlDataReader myReader;
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
 
 
 

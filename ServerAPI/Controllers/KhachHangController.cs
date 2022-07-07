@@ -120,9 +120,8 @@ namespace ServerAPI.Controllers
 				on XaPhuong.IDTuyenThu = TuyenThu.IDTuyenThu
 				inner join PhanTuyen 
 				on PhanTuyen.IDTuyenThu = TuyenThu.IDTuyenThu             
-                where PhanTuyen.IDNhanVien = " + idNhanVien +
+                where PhanTuyen.IDNhanVien = " + idNhanVien + "and KhachHang.TrangThai = 1" +
                 "order by KhachHang.TrangThai desc"
-
             ;
             DataTable table = new DataTable();
 
@@ -408,7 +407,7 @@ namespace ServerAPI.Controllers
                     return new JsonResult(new
                     {
                         severity = "warning",
-                        message = "Không Tồn Tại Khách Hàng Không Có Tuyên Thu"
+                        message = "Không Tồn Tại Khách Hàng Không Có Tuyến Thu"
                     }
                         );
                 }
