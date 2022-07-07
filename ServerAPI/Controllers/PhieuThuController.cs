@@ -38,7 +38,7 @@ namespace ServerAPI.Controllers
                 on XaPhuong.IDQuanHuyen = QuanHuyen.IDQuanHuyen
                 inner join LoaiKhachHang
                 on KhachHang.IDLoaiKhachHang = LoaiKhachHang.IDLoaiKhachHang
-                   order by PhieuThu.NgayThu
+                   order by KhachHang.IDKhachHang,KyThu.Thang ASC
 
             ";
             DataTable table = new DataTable();
@@ -84,7 +84,7 @@ namespace ServerAPI.Controllers
                 join PhanTuyen 
                 on PhanTuyen.IDTuyenThu = TuyenThu.IDTuyenThu
                     where PhanTuyen.IDNhanVien = " + idNV +
-                  " order by PhieuThu.NgayThu";
+                  " order by KhachHang.IDKhachHang,KyThu.Thang ASC";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
