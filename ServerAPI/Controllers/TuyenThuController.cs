@@ -98,7 +98,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("{tinhTrang}/{nhanVien}/{quanHuyen}/{xaPhuong}")]
-        public JsonResult GetByQuanHuyen(int tinhTrang, int nhanVien, int quanHuyen, int xaPhuong)
+        public JsonResult GetByFilters(int tinhTrang, int nhanVien, int quanHuyen, int xaPhuong)
         {
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
