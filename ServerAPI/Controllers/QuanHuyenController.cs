@@ -105,7 +105,7 @@ namespace ServerAPI.Controllers
         public JsonResult Post(QuanHuyen qh)
         {
             string
-                query = @"insert into QuanHuyen values(N'"+qh.TenQuanHuyen+ "');";
+                query = @"insert into QuanHuyen values(N'" + qh.TenQuanHuyen + "');";
 
             DataTable table = new DataTable();
 
@@ -118,7 +118,7 @@ namespace ServerAPI.Controllers
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {
                 myCon.Open();
-                
+
                 using (SqlCommand myCommand = new SqlCommand(checkQuery, myCon))
                 {
                     myReader = myCommand.ExecuteReader();
@@ -150,34 +150,109 @@ namespace ServerAPI.Controllers
                         message = "Tên Quận Huyện Đã Tồn Tại"
                     });
                 }
-                    
+
             }
 
-           
+
         }
 
-        [HttpDelete]
+        [HttpDelete("{idQuanHuyen}")]
         public JsonResult Delete(int idQuanHuyen)
         {
-            string
-                query = @"delete QuanHuyen where IDQuanHuyen = " + idQuanHuyen;
+            string query = @"delete QuanHuyen where IDQuanHuyen = " + idQuanHuyen;
+
             DataTable table = new DataTable();
+
+
+            string checkQuery = @"select TenXaPhuong from XaPhuong where IDQuanHuyen =" + idQuanHuyen;
+
+            DataTable checkDistrict = new DataTable();
+
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
+
             SqlDataReader myReader;
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {
                 myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+
+                using (SqlCommand myCommand = new SqlCommand(checkQuery, myCon))
                 {
                     myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-
+                    checkDistrict.Load(myReader);
                     myReader.Close();
-                    myCon.Close();
                 }
-            }
+                if (checkDistrict.Rows.Count == 0)
+                {
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
 
-            return new JsonResult("Deleted Successfully");
+                        myReader.Close();
+                        myCon.Close();
+
+                        return new JsonResult(new
+                        {
+                            severity = "success",
+                            message = "Xoá Thành Công Quận Huyện"
+                        });
+                    }
+                }
+                else
+                {
+                    bool canDelete = true;
+                    for (int i = 0; i < checkDistrict.Rows.Count; i++)
+                    {
+                        DataTable checkWard = new DataTable();
+                        string Ward = @"select * from TuyenThu where TenTuyenThu like N'%" + checkDistrict.Rows[i][0] + "%'";
+
+                        using (SqlCommand myCommand = new SqlCommand(Ward, myCon))
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            checkWard.Load(myReader);
+                            myReader.Close();
+                        }
+                        if (checkWard.Rows.Count != 0)
+                        {
+                            canDelete = false;
+                        }
+                    }
+                    if (canDelete == true)
+                    {
+                        string deleleWards = "delete XaPhuong where IDQuanHuyen =" + idQuanHuyen;
+
+                        using (SqlCommand myCommand = new SqlCommand(deleleWards, myCon))
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            table.Load(myReader);
+                            myReader.Close();
+                        }
+
+                        using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            table.Load(myReader);
+                            myReader.Close();
+                            myCon.Close();
+                        }
+                        return new JsonResult(new
+                        {
+                            severity = "success",
+                            message = "Xoá Thành Công Quận Huyện Và Xã Phường Thành Công"
+                        });
+                    }
+                    else
+                    {
+                        return new JsonResult(new
+                        {
+                            severity = "warning",
+                            message = "Không Thể Xoá Quận Huyện"
+                        });
+                    }
+                }
+
+            }
         }
+
     }
 }

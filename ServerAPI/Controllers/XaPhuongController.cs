@@ -19,7 +19,7 @@ namespace ServerAPI.Controllers
         public JsonResult Get()
         {
             string query = @"
-                            select XaPhuong.IDXaPhuong, XaPhuong.TenXaPhuong, XaPhuong.IDQuanHuyen ,QuanHuyen.TenQuanHuyen 
+                            select XaPhuong.IDXaPhuong, XaPhuong.TenXaPhuong, XaPhuong.IDQuanHuyen ,QuanHuyen.TenQuanHuyen, XaPhuong.IDTuyenThu 
                             from XaPhuong
                             join QuanHuyen on XaPhuong.IDQuanHuyen = QuanHuyen.IDQuanHuyen
                             ";
@@ -138,14 +138,14 @@ namespace ServerAPI.Controllers
                 query = @"insert into XaPhuong values(N'" + xp.TenXaPhuong + "'," + xp.IDQuanHuyen + ",null);";
             DataTable table = new DataTable();
 
-            string checkQuery = @"select * from XaPhuong where TenXaPhuong like N'"+ xp.TenXaPhuong + "' and IDQuanHuyen = "+ xp.IDQuanHuyen;
+            string checkQuery = @"select * from XaPhuong where TenXaPhuong like N'" + xp.TenXaPhuong + "' and IDQuanHuyen = " + xp.IDQuanHuyen;
 
             DataTable checkWard = new DataTable();
 
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
 
-            
+
 
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {
@@ -158,7 +158,7 @@ namespace ServerAPI.Controllers
                     myReader.Close();
                 }
 
-                if(checkWard.Rows.Count == 0)
+                if (checkWard.Rows.Count == 0)
                 {
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
@@ -174,41 +174,86 @@ namespace ServerAPI.Controllers
                     }
                 }
                 else
-                {                 
+                {
                     return new JsonResult(new
                     {
                         severity = "warning",
                         message = "Tên Xã Phường Trong Quận Huyện Đã Tồn Tại"
                     });
                 }
-                
+
             }
 
-            
+
         }
 
-        [HttpDelete]
+        [HttpDelete("{idXaPhuong}")]
         public JsonResult Delete(int idXaPhuong)
         {
             string
                 query = @"delete XaPhuong where IDXaPhuong = " + idXaPhuong;
             DataTable table = new DataTable();
+
+            string getNameWard = @"select TenXaPhuong from XaPhuong where IDXaPhuong =" + idXaPhuong;
+
+            DataTable checkWard = new DataTable();
+
+            DataTable NameWard = new DataTable();
+
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
+
             SqlDataReader myReader;
+
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {
                 myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+
+                using (SqlCommand myCommand = new SqlCommand(getNameWard, myCon))
                 {
                     myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-
+                    NameWard.Load(myReader);
                     myReader.Close();
-                    myCon.Close();
                 }
+
+                string nameWard = NameWard.Rows[0][0].ToString();
+
+                string checkQuery = @"select * from TuyenThu where TenTuyenThu like N'%" + nameWard + "%'";
+
+                using (SqlCommand myCommand = new SqlCommand(checkQuery, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    checkWard.Load(myReader);
+                    myReader.Close();
+                }
+
+                if (checkWard.Rows.Count == 0)
+                {
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+
+                        myReader.Close();
+                        myCon.Close();
+                    }
+                    return new JsonResult(new
+                    {
+                        severity = "success",
+                        message = "Xoá Thành Công Xã Phường"
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        severity = "warning",
+                        message = "Không Thể Xoá"
+                    });
+                }
+
             }
 
-            return new JsonResult("Deleted Successfully");
+
         }
     }
 }
