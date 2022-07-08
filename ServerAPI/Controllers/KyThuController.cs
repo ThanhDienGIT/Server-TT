@@ -111,7 +111,7 @@ namespace ServerAPI.Controllers
             }
             else if (nam == -1 && thang != -1)
             {
-                string query = @"select * from dbo.KyThu where thang=" + thang + @"ORDER BY nam ASC, thang ASC";
+                string query = @"select IDKyThu, TenKyThu, Thang, Nam, convert(varchar, NgayTao, 103) as NgayTao from dbo.KyThu where thang=" + thang + @"ORDER BY nam ASC, thang ASC";
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
                     myCon.Open();
@@ -128,7 +128,7 @@ namespace ServerAPI.Controllers
             }
             else if (nam != -1 && thang == -1)
             {
-                string query = @"select * from dbo.KyThu where nam=" + nam + @" ORDER BY nam ASC, thang ASC";
+                string query = @"select IDKyThu, TenKyThu, Thang, Nam, convert(varchar, NgayTao, 103) as NgayTao from dbo.KyThu where nam=" + nam + @" ORDER BY nam ASC, thang ASC";
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
                     myCon.Open();
@@ -145,7 +145,7 @@ namespace ServerAPI.Controllers
             }
             else //if(nam != -1 && thang != -1)
             {
-                string query = @"select * from dbo.KyThu where thang=" + thang +
+                string query = @"select IDKyThu, TenKyThu, Thang, Nam, convert(varchar, NgayTao, 103) as NgayTao from dbo.KyThu where thang=" + thang +
                     @" and nam=" + nam + @" ORDER BY nam ASC, thang ASC";
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
