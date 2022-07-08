@@ -21,7 +21,7 @@ namespace ServerAPI.Controllers
         public JsonResult Get()
         {
             string query = @"
-               select PhieuThu.MaSoPhieu,PhieuThu.IDPhieu,KhachHang.MaKhachHang,KhachHang.IDKhachHang,KhachHang.HoTenKH,TuyenThu.MaTuyenThu,TuyenThu.IDTuyenThu,TuyenThu.TenTuyenThu,KyThu.IDKyThu,KyThu.TenKyThu,
+                select PhieuThu.MaSoPhieu,PhieuThu.IDPhieu,KhachHang.MaKhachHang,KhachHang.IDKhachHang,KhachHang.HoTenKH,KhachHang.DiaChi,TuyenThu.MaTuyenThu,TuyenThu.IDTuyenThu,TuyenThu.TenTuyenThu,KyThu.IDKyThu,KyThu.TenKyThu,
 					KyThu.Thang,KyThu.Nam,NhanVien.MaNhanVien,NhanVien.IDNhanVien,NhanVien.HoTen,PhieuThu.MauSoPhieu,PhieuThu.NgayTao,PhieuThu.NgayThu,XaPhuong.IDXaPhuong,XaPhuong.TenXaPhuong,QuanHuyen.IDQuanHuyen,QuanHuyen.TenQuanHuyen,LoaiKhachHang.IDLoaiKhachHang,LoaiKhachHang.TenLoai,LoaiKhachHang.Gia
                 from PhieuThu
                 inner join KhachHang
@@ -38,7 +38,7 @@ namespace ServerAPI.Controllers
                 on XaPhuong.IDQuanHuyen = QuanHuyen.IDQuanHuyen
                 inner join LoaiKhachHang
                 on KhachHang.IDLoaiKhachHang = LoaiKhachHang.IDLoaiKhachHang
-                   order by PhieuThu.NgayThu
+                   order by KhachHang.IDKhachHang,KyThu.Thang ASC
 
             ";
             DataTable table = new DataTable();
@@ -64,7 +64,7 @@ namespace ServerAPI.Controllers
         public JsonResult GetPhieuNV(int idNV)
         {
             string query = @"
-               select PhieuThu.MaSoPhieu,PhieuThu.IDPhieu,KhachHang.MaKhachHang,KhachHang.IDKhachHang,KhachHang.HoTenKH,TuyenThu.MaTuyenThu,TuyenThu.IDTuyenThu,TuyenThu.TenTuyenThu,KyThu.IDKyThu,KyThu.TenKyThu,
+               select PhieuThu.MaSoPhieu,PhieuThu.IDPhieu,KhachHang.MaKhachHang,KhachHang.IDKhachHang,KhachHang.HoTenKH,KhachHang.DiaChi,TuyenThu.MaTuyenThu,TuyenThu.IDTuyenThu,TuyenThu.TenTuyenThu,KyThu.IDKyThu,KyThu.TenKyThu,
 					KyThu.Thang,KyThu.Nam,NhanVien.MaNhanVien,NhanVien.IDNhanVien,NhanVien.HoTen,PhieuThu.MauSoPhieu,PhieuThu.NgayTao,PhieuThu.NgayThu,XaPhuong.IDXaPhuong,XaPhuong.TenXaPhuong,QuanHuyen.IDQuanHuyen,QuanHuyen.TenQuanHuyen,LoaiKhachHang.IDLoaiKhachHang,LoaiKhachHang.TenLoai,LoaiKhachHang.Gia
                 from PhieuThu
                 inner join KhachHang
@@ -84,7 +84,7 @@ namespace ServerAPI.Controllers
                 join PhanTuyen 
                 on PhanTuyen.IDTuyenThu = TuyenThu.IDTuyenThu
                     where PhanTuyen.IDNhanVien = " + idNV +
-                  " order by PhieuThu.NgayThu";
+                  " order by KhachHang.IDKhachHang,KyThu.Thang ASC";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
