@@ -155,6 +155,7 @@ namespace ServerAPI.Controllers
             string query = @"
                 INSERT INTO dbo.NhanVien
                 (MaNhanVien, HoTen, Email, GioiTinh, SoDienThoai, NgaySinh, DiaChi, CCCD, TaiKhoan, MatKhau) 
+                OUTPUT inserted.IDNhanVien
                 VALUES
                 ('" + emp.MaNhanVien + @"', N'" + emp.HoTen + @"', '" + emp.Email + @"', N'" + emp.GioiTinh + @"', '" + emp.SoDienThoai + @"',
                 '" + formattedNgaySinh + @"', N'" + emp.DiaChi + @"', '" + emp.CCCD + @"', '" + emp.TaiKhoan + @"', '" + emp.MatKhau + @"')
@@ -175,7 +176,7 @@ namespace ServerAPI.Controllers
                 }
             }
 
-            return new JsonResult("Added Successfully");
+            return new JsonResult(table);
         }
         [HttpPut]
         public JsonResult Put(NhanVien emp)
@@ -249,7 +250,7 @@ namespace ServerAPI.Controllers
                 string filename = postedFile.FileName;
                 var physicalPath = _webHostEnvironment.ContentRootPath + "/NhanVien_ProfilePictures/" + filename;
 
-                using(var stream = new FileStream(physicalPath, FileMode.Create))
+                using (var stream = new FileStream(physicalPath, FileMode.Create))
                 {
                     postedFile.CopyTo(stream);
                 }
