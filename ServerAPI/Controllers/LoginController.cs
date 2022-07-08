@@ -216,31 +216,59 @@ namespace ServerAPI.Controllers
 
             string query1 = @"select * from NhanVien where CCCD = " + staff.CCCD;
             DataTable table = new DataTable();
-            
+
+            string checkQuery = @"select * from NhanVien where (Email = '" + staff.Email + "' or CCCD = '" + staff.CCCD + "' or SoDienThoai = '" + staff.SoDienThoai + "') and IDNhanVien != " + staff.IDNhanVien;
 
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
             SqlDataReader myReader1;
+
+            DataTable checkData = new DataTable();
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {
                 myCon.Open();
 
-                
-
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                using (SqlCommand myCommand = new SqlCommand(checkQuery, myCon))
                 {
                     myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
+                    checkData.Load(myReader);
                     myReader.Close();
-                    
                 }
 
-                myCon.Close();
-            }
+                if (checkData.Rows.Count > 0)
+                {
+                    myCon.Close();
+                    return new JsonResult(new
+                    {
+                        severity = "warning",
+                        message = "Đã Tồn Tại Nhân Viên Với"
+                    }
+                        );
+                }
+                else
+                {
 
-            return new JsonResult("Updated Successfully");
+                }
+                {
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                        return new JsonResult(new
+                        {
+                            severity = "success",
+                            message = "Chỉnh Sửa Nhân Viên Thành Công"
+                        }
+                        );
+                    }
+                }
+            }
         }
 
 
-    }
+        }
 }

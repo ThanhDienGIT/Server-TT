@@ -97,14 +97,16 @@ namespace ServerAPI.Controllers
             return new JsonResult(result);
         }
 
-        [HttpGet("{nhanVien}/{quanHuyen}/{xaPhuong}")]
-        public JsonResult GetByQuanHuyen(int nhanVien, int quanHuyen, int xaPhuong)
+        [HttpGet("{tinhTrang}/{nhanVien}/{quanHuyen}/{xaPhuong}")]
+        public JsonResult GetByFilters(int tinhTrang, int nhanVien, int quanHuyen, int xaPhuong)
         {
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("DBCon");
             SqlDataReader myReader;
-
-            string selectFromString = @"select distinct Tuyenthu.IDTuyenThu, Tuyenthu.MaTuyenThu, 
+            if (tinhTrang != -1)
+            {
+                //Khong phai tuyen thu chua duoc trien khai
+                string selectFromString = @"select distinct Tuyenthu.IDTuyenThu, Tuyenthu.MaTuyenThu, 
                     TuyenThu.TenTuyenThu, QuanHuyen.IDQuanHuyen, QuanHuyen.TenQuanHuyen, 
                     NhanVien.IDNhanVien, NhanVien.HoTen, 
                     convert(varchar, NgayBatDau, 103) as NgayBatDau, 
@@ -115,37 +117,126 @@ namespace ServerAPI.Controllers
 	            full outer join dbo.QuanHuyen on QuanHuyen.IDQuanHuyen = PhanTuyen.IDQuanHuyen 
                     or QuanHuyen.IDQuanHuyen = XaPhuong.IDQuanHuyen
                 full outer join dbo.NhanVien on PhanTuyen.IDNhanVien = NhanVien.IDNhanVien ";
-            string whereString = @"where TuyenThu.IDTuyenThu is not null ";
-            string orderByString = @"ORDER BY TuyenThu.IDTuyenThu DESC";
+                string whereString = @"where TuyenThu.IDTuyenThu is not null ";
+                string orderByString = @"ORDER BY TuyenThu.IDTuyenThu DESC";
 
-            if (nhanVien != -1)
-            {
-                whereString = String.Concat(whereString, " AND NhanVien.IDNhanVien = ", nhanVien, " ");
-            }
-            if (quanHuyen != -1)    
-            {
-                whereString = String.Concat(whereString, " AND QuanHuyen.IDQuanHuyen = ", quanHuyen, " ");
-            }
-            if (xaPhuong != -1)
-            {
-                whereString = String.Concat(whereString, " AND XaPhuong.IDXaPhuong = ", xaPhuong, " ");
-            }
-
-            string query = String.Concat(selectFromString, whereString, orderByString);
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                if (nhanVien != -1)
                 {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-
-                    myReader.Close();
-                    myCon.Close();
+                    whereString = string.Concat(whereString, " AND NhanVien.IDNhanVien = ", nhanVien, " ");
                 }
-            }
+                if (quanHuyen != -1)
+                {
+                    whereString = string.Concat(whereString, " AND QuanHuyen.IDQuanHuyen = ", quanHuyen, " ");
+                }
+                if (xaPhuong != -1)
+                {
+                    whereString = string.Concat(whereString, " AND XaPhuong.IDXaPhuong = ", xaPhuong, " ");
+                }
 
-            return new JsonResult(table);
+                if(tinhTrang == 0)
+                {
+                    //Tat ca tuyen thu
+                    string query = string.Concat(selectFromString, whereString, orderByString);
+                    using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                    {
+                        myCon.Open();
+                        using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            table.Load(myReader);
+
+                            myReader.Close();
+                            myCon.Close();
+                        }
+                    }
+
+                    return new JsonResult(table);
+                }
+                else
+                {
+                    if (tinhTrang == 1)
+                    {
+                        //Tuyen thu dang trien khai
+                        whereString = string.Concat(whereString, " AND NgayBatDau is not null AND NgayKetThuc is null ");
+                        string query = string.Concat(selectFromString, whereString, orderByString);
+                        using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                        {
+                            myCon.Open();
+                            using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                            {
+                                myReader = myCommand.ExecuteReader();
+                                table.Load(myReader);
+
+                                myReader.Close();
+                                myCon.Close();
+                            }
+                        }
+                        return new JsonResult(table);
+                    }
+                    else
+                    {
+                        //Tuyen thu da ket thuc
+                        whereString = string.Concat(whereString, " AND NgayKetThuc is not null ");
+                        string query = string.Concat(selectFromString, whereString, orderByString);
+                        using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                        {
+                            myCon.Open();
+                            using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                            {
+                                myReader = myCommand.ExecuteReader();
+                                table.Load(myReader);
+
+                                myReader.Close();
+                                myCon.Close();
+                            }
+                        }
+                        return new JsonResult(table);
+                    }   
+                }
+                
+            }
+            else
+            {
+                //Tuyen thu chua duoc trien khai
+                Console.WriteLine("Tuyen thu chua duoc trien khai");
+                string selectFromString = @"select distinct Tuyenthu.IDTuyenThu, Tuyenthu.MaTuyenThu, 
+                    TuyenThu.TenTuyenThu, QuanHuyen.IDQuanHuyen, QuanHuyen.TenQuanHuyen, 
+                    NhanVien.IDNhanVien, NhanVien.HoTen, 
+                    convert(varchar, NgayBatDau, 103) as NgayBatDau, 
+                    convert(varchar, NgayKetThuc, 103) as NgayKetThuc
+                from dbo.TuyenThu 
+                full outer join dbo.XaPhuong on TuyenThu.IDTuyenThu = XaPhuong.IDTuyenThu 
+                full outer join dbo.PhanTuyen on TuyenThu.IDTuyenThu = PhanTuyen.IDTuyenThu 
+	            full outer join dbo.QuanHuyen on QuanHuyen.IDQuanHuyen = PhanTuyen.IDQuanHuyen 
+                    or QuanHuyen.IDQuanHuyen = XaPhuong.IDQuanHuyen
+                full outer join dbo.NhanVien on PhanTuyen.IDNhanVien = NhanVien.IDNhanVien ";
+                string whereString = @"where TuyenThu.IDTuyenThu is not null and NgayBatDau is null ";
+                string orderByString = @"ORDER BY TuyenThu.IDTuyenThu DESC ";
+
+                if (quanHuyen != -1)
+                {
+                    whereString = String.Concat(whereString, " AND QuanHuyen.IDQuanHuyen = ", quanHuyen, " ");
+                }
+                if (xaPhuong != -1)
+                {
+                    whereString = String.Concat(whereString, " AND XaPhuong.IDXaPhuong = ", xaPhuong, " ");
+                }
+
+                string query = String.Concat(selectFromString, whereString, orderByString);
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+
+                        myReader.Close();
+                        myCon.Close();
+                    }
+                }
+                return new JsonResult(table);
+            }
         }
 
         [HttpPost("{idQuanHuyen}")]
