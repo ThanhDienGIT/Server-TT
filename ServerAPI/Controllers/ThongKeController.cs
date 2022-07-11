@@ -380,7 +380,7 @@ namespace ServerAPI.Controllers
         [HttpGet("GetTurnover")]
         public JsonResult GetTurnover()
         {
-            string query = @"select c.MaTuyenThu, C.TenTuyenThu ,b.MaNhanVien,b.HoTen ,w.IDLoaiKhachHang ,q.TenQuanHuyen , e.TenXaPhuong, a.NgayTao,a.NgayThu
+            string query = @"select c.MaTuyenThu, C.TenTuyenThu ,b.MaNhanVien,b.HoTen ,w.IDLoaiKhachHang ,q.TenQuanHuyen , e.TenXaPhuong, a.NgayTao,a.NgayThu, w.HoTenKH
                             from PhieuThu as a , NhanVien as b,TuyenThu as c ,XaPhuong as e, QuanHuyen as q,KhachHang as w
                             where a.IDNhanVien = b.IDNhanVien and a.IDTuyenThu = c.IDTuyenThu and a.IDKhachHang = w.IDKhachHang 
                             and w.IDXaPhuong = e.IDXaPhuong and e.IDQuanHuyen = q.IDQuanHuyen";
@@ -494,7 +494,7 @@ namespace ServerAPI.Controllers
         public JsonResult GetCustomerifsall(string ngaybatdau, string ngayketthuc,
          string tenquanhuyen, string tenxaphuong, string tennhanvien)
         {
-            string selectform = @"select c.MaTuyenThu, C.TenTuyenThu ,b.MaNhanVien,b.HoTen ,w.IDLoaiKhachHang ,q.TenQuanHuyen , e.TenXaPhuong, a.NgayTao,a.NgayThu
+            string selectform = @"select c.MaTuyenThu, C.TenTuyenThu ,b.MaNhanVien,b.HoTen ,w.IDLoaiKhachHang ,q.TenQuanHuyen , e.TenXaPhuong, a.NgayTao,a.NgayThu,w.HoTenKH
                             from PhieuThu as a , NhanVien as b,TuyenThu as c ,XaPhuong as e, QuanHuyen as q,KhachHang as w
                             where a.IDNhanVien = b.IDNhanVien and a.IDTuyenThu = c.IDTuyenThu and a.IDKhachHang = w.IDKhachHang 
                             and w.IDXaPhuong = e.IDXaPhuong and e.IDQuanHuyen = q.IDQuanHuyen";
