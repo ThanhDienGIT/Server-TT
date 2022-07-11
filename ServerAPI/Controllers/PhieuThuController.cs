@@ -22,7 +22,7 @@ namespace ServerAPI.Controllers
         {
             string query = @"
                 select PhieuThu.MaSoPhieu,PhieuThu.IDPhieu,KhachHang.MaKhachHang,KhachHang.IDKhachHang,KhachHang.HoTenKH,KhachHang.DiaChi,TuyenThu.MaTuyenThu,TuyenThu.IDTuyenThu,TuyenThu.TenTuyenThu,KyThu.IDKyThu,KyThu.TenKyThu,
-					KyThu.Thang,KyThu.Nam,NhanVien.MaNhanVien,NhanVien.IDNhanVien,NhanVien.HoTen,PhieuThu.MauSoPhieu,PhieuThu.NgayTao,PhieuThu.NgayThu,XaPhuong.IDXaPhuong,XaPhuong.TenXaPhuong,QuanHuyen.IDQuanHuyen,QuanHuyen.TenQuanHuyen,LoaiKhachHang.IDLoaiKhachHang,LoaiKhachHang.TenLoai,LoaiKhachHang.Gia
+					KyThu.Thang,KyThu.Nam,NhanVien.MaNhanVien,NhanVien.IDNhanVien,NhanVien.HoTen,NhanVien.SoDienThoai,PhieuThu.MauSoPhieu,PhieuThu.NgayTao,PhieuThu.NgayThu,XaPhuong.IDXaPhuong,XaPhuong.TenXaPhuong,QuanHuyen.IDQuanHuyen,QuanHuyen.TenQuanHuyen,LoaiKhachHang.IDLoaiKhachHang,LoaiKhachHang.TenLoai,LoaiKhachHang.Gia
                 from PhieuThu
                 inner join KhachHang
                 on PhieuThu.IDKhachHang = KhachHang.IDKhachHang
@@ -64,8 +64,8 @@ namespace ServerAPI.Controllers
         public JsonResult GetPhieuNV(int idNV)
         {
             string query = @"
-               select PhieuThu.MaSoPhieu,PhieuThu.IDPhieu,KhachHang.MaKhachHang,KhachHang.IDKhachHang,KhachHang.HoTenKH,KhachHang.DiaChi,TuyenThu.MaTuyenThu,TuyenThu.IDTuyenThu,TuyenThu.TenTuyenThu,KyThu.IDKyThu,KyThu.TenKyThu,
-					KyThu.Thang,KyThu.Nam,NhanVien.MaNhanVien,NhanVien.IDNhanVien,NhanVien.HoTen,PhieuThu.MauSoPhieu,PhieuThu.NgayTao,PhieuThu.NgayThu,XaPhuong.IDXaPhuong,XaPhuong.TenXaPhuong,QuanHuyen.IDQuanHuyen,QuanHuyen.TenQuanHuyen,LoaiKhachHang.IDLoaiKhachHang,LoaiKhachHang.TenLoai,LoaiKhachHang.Gia
+                select PhieuThu.MaSoPhieu,PhieuThu.IDPhieu,KhachHang.MaKhachHang,KhachHang.IDKhachHang,KhachHang.HoTenKH,KhachHang.DiaChi,TuyenThu.MaTuyenThu,TuyenThu.IDTuyenThu,TuyenThu.TenTuyenThu,KyThu.IDKyThu,KyThu.TenKyThu,
+					KyThu.Thang,KyThu.Nam,NhanVien.MaNhanVien,NhanVien.IDNhanVien,NhanVien.HoTen,NhanVien.SoDienThoai,PhieuThu.MauSoPhieu,PhieuThu.NgayTao,PhieuThu.NgayThu,XaPhuong.IDXaPhuong,XaPhuong.TenXaPhuong,QuanHuyen.IDQuanHuyen,QuanHuyen.TenQuanHuyen,LoaiKhachHang.IDLoaiKhachHang,LoaiKhachHang.TenLoai,LoaiKhachHang.Gia
                 from PhieuThu
                 inner join KhachHang
                 on PhieuThu.IDKhachHang = KhachHang.IDKhachHang
