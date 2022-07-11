@@ -130,7 +130,22 @@ namespace ServerAPI.Controllers
                 }
                 if (xaPhuong != -1)
                 {
-                    whereString = string.Concat(whereString, " AND XaPhuong.IDXaPhuong = ", xaPhuong, " ");
+                    string getTenXaPhuong = @"Select TenXaPhuong from XaPhuong where IDXaPhuong = " + xaPhuong;
+                    DataTable tableTenXaPhuong = new DataTable();
+                    using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                    {
+                        myCon.Open();
+                        using (SqlCommand myCommand = new SqlCommand(getTenXaPhuong, myCon))
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            tableTenXaPhuong.Load(myReader);
+                            myReader.Close();
+                            myCon.Close();
+                        }
+                    }
+                    string tenXaPhuong = tableTenXaPhuong.Rows[0][0].ToString();
+                    Console.WriteLine(tenXaPhuong);
+                    whereString = string.Concat(whereString, " AND TuyenThu.TenTuyenThu like N'%", tenXaPhuong, "%' ");
                 }
 
                 if(tinhTrang == 0)
